@@ -37,7 +37,7 @@ class AppController extends Controller {
 	 * Atributtes
 	 ----------------------------------------*/
 	
-	public $title		=	"Cordel";
+	public $title		=	"JINF";
 	
 	public $components	= 	array(
 

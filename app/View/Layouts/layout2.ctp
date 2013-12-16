@@ -17,7 +17,7 @@
 <div id="header" class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<?php echo  $this->Html->link( $this->Html->image('logo-jinf-ifma-mobile.png', array('width' => '60px')), '/', array( 'escape' => false, 'class' => 'brand' ) ) ?>
+			<?php echo  $this->Html->link( $title_for_layout, '/', array( 'escape' => false, 'class' => 'brand' ) ) ?>
 			<ul id="menu" class="nav">
 				<?php echo $this->FrontEnd->getMenu() ?>
 			</ul>
@@ -48,12 +48,12 @@
 	</div>
 </div>
 
-<div id="middle">
+<div id="">
 
 	<?php
 		print $this->FrontEnd->getHeader( $this->name, $this->action, $subtitle );
 		print $this->FrontEnd->message();
-    	print $this->FrontEnd->getSubMenu( $submenu, $this->name, $this->action );
+    	//print $this->FrontEnd->getSubMenu( $submenu, $this->name, $this->action );
     ?>
 
 	<div id="content"><?= $content_for_layout ?></div>

@@ -14,6 +14,8 @@ class UsersController extends AppController {
 	
 	public $submenu	= array( 'index', 'add' );
 
+	public $uses = array('User', 'Credencial');
+
 	/*----------------------------------------
 	 * Callbacks
 	 ----------------------------------------*/
@@ -70,6 +72,7 @@ class UsersController extends AppController {
 		}
 
 		$this->profilesList();
+		$this->set('credenciais', $this->Credencial->find('list', array('fields' => array('id', 'descricao'))));
 	}
 	
 	public function edit( $id = null ){
@@ -114,6 +117,7 @@ class UsersController extends AppController {
 			} else
 				$this->setMessage( 'validateError' );
 		}
+		$this->set('credenciais', $this->Credencial->find('list', array('fields' => array('id', 'descricao'))));
 		
 		$this->profilesList();
 	}
@@ -206,6 +210,8 @@ class UsersController extends AppController {
 		
 		$this->submenu = array();
 		$this->subtitle = "Meus Dados";
+		$this->set('credenciais', $this->Credencial->find('list', array('fields' => array('id', 'descricao'))));
+
 	}
 	
 	/*----------------------------------------

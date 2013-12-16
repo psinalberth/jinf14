@@ -5,11 +5,12 @@ $(document).ready( function(){
 </script>
 
 <?php
-	print $this->Form->create( 'User', array( 'class' => 'form-horizontal' ) );
-	print $this->Form->hidden( 'User.id' );
-	print $this->BForm->input( 'User.name', array( 'label' => 'Nome', 'placeholder' => 'Nome do usuário' ) );
-	print $this->BForm->input( 'User.email', array( 'label' => 'Email', 'autocomplete' => 'off', 'placeholder' => 'exemplo@dominio.com' ) );
-	print $this->BForm->input( 'User.password', array( 'label' => 'Senha Atual', 'type' => 'password', 'autocomplete' => 'off' ) );
+		print $this->Form->create( 'User', array( 'class' => 'form-horizontal' ) );
+		print $this->BForm->input( 'User.matricula', array( 'label' => 'Matrícula', 'placeholder' => 'Matrícula', 'type' => 'text' ) );
+		print $this->BForm->input( 'User.email', array( 'label' => 'Email', 'placeholder' => 'exemplo@dominio.com', 'type' => 'email' ) );
+		print $this->BForm->input( 'User.telefone', array( 'label' => 'Telefone', 'placeholder' => 'Telefone', 'type' => 'text' ) );
+		print $this->BForm->input( 'User.credencial_id', array( 'label' => 'Credencial', 'empty' => '-- Selecione --' , 'options' => $credenciais) );
+
 ?>
 
 <fieldset>

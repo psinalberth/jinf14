@@ -22,8 +22,9 @@ $(document).ready( function(){
 <body>
 
 <div id="login">
-	<h1><?= $title_for_layout ?></h1>
-	<h6>LOGIN</h6>
+	<h1><?php //$title_for_layout ?></h1>
+	<?php echo $this->Html->image('logo-jinf-ifma.png')?> 
+	<h6></h6>
 	<?php
 		print $this->FrontEnd->message();
 		print $content_for_layout;

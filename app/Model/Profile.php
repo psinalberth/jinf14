@@ -37,7 +37,8 @@ class Profile extends AppModel {
 	
 	public static function isAdmin( $profile_id ){
 
-		return $profile_id == Configure::read( 'AdminProfileId' );
+		//return $profile_id == Configure::read( 'AdminProfileId' );
+		return false; // mudar depois
 	}
 
 	public function getAreas( $profile_id ){

@@ -4,10 +4,10 @@
 <div class="modal hide fade" id="delete">
 	<div class="modal-header">
 		<a class="close" data-dismiss="modal">×</a>
-		<h3>Exclusão de <?= $model ?></h3>
+		<h3>Exclusão de <?php echo $model ?></h3>
 	</div>
 	<div class="modal-body">
-		<p>Tem certeza de que deseja excluir este <?= $model ?>? <?php if( !empty( $msg ) ) print $msg; ?></p>
+		<p>Tem certeza de que deseja excluir este <?php echo $model ?>? <?php if( !empty( $msg ) ) print $msg; ?></p>
 	</div>
 	<div class="modal-footer">
 		<a id="deleteCancel" href="#" class="btn">Cancelar</a>
