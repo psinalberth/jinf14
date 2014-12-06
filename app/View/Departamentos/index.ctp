@@ -13,13 +13,13 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach( $departamentos as $user ): ?>
+	<?php foreach( $departamentos as $departamento ): ?>
 
 	<tr>
-		<td><i class="icon-user"></i></td>
-		<td><?= $this->Html->link( $user[ 'User' ][ 'name' ], "/users/view/{$user['User']['id']}", array( 'escape' => false ) ) ?></td>
-		<td><?= $user[ 'Departamento' ][ 'id' ] ?></td>
-		<td><?= $user[ 'Departamento' ][ 'name' ] ?></td>
+		<td><i class="icon-home"></i></td>
+		<!--td><?= $this->Html->link( $departamento[ 'departamento' ][ 'name' ], "/departamentos/view/{$departamento['departamento']['id']}", array( 'escape' => false ) ) ?></td-->
+		<td><?= $departamento[ 'Departamento' ][ 'id' ] ?></td>
+		<td><?= $departamento[ 'Departamento' ][ 'name' ] ?></td>
 	</tr>
 		
 	<?php endforeach; ?>
