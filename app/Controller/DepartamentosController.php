@@ -51,9 +51,42 @@ class DepartamentosController extends AppController {
 	
 	public function edit($id = null) {
 		
+		$this->Departamento->id = $id;
+
+		if ($this->request->isGet()) {
+			
+			$this->Departamento->contain();
+			$this->data = $this->Departamento->findById($id);
+				
+		} else {
+			
+			if ($this->Departamento->validates()) {
+			
+				if ($this->Departamento->save($this->request->data)) {
+			
+					$this->setMessage('saveSuccess', 'Departamento');
+					$this->redirect(array('controller' => $this->name, 'action' => 'view', $this->Departamento->id));
+			
+				} else
+			
+					$this->setMessage('saveError', 'Departamento');
+					
+			} else {
+			
+				$this->setMessage('validateError');
+			}
+		}
 	}
 	
 	public function delete($id = null) {
 		
+		if($this->Departamento->delete($id))
+			
+			$this->setMessage('deleteSuccess', 'Departamento');
+		
+		else
+			$this->setMessage('saveError', 'Departamento');
+			
+		$this->redirect(array('controller' => $this->name, 'action' => 'index'));
 	}
 }
