@@ -1,5 +1,4 @@
 <?php
-
 class TipoAtividade extends AppModel {
 	
 	/*----------------------------------------
@@ -7,11 +6,8 @@ class TipoAtividade extends AppModel {
 	 ----------------------------------------*/ 
 	
 	public $name 			=	'TipoAtividade';
-
 	public $useTable		=    'tipo_atividade';
-
-	public $label			=	'Usuário';
-
+	public $label			=	'Tipo de Atividade';
   
 	
 	/*----------------------------------------
@@ -23,21 +19,18 @@ class TipoAtividade extends AppModel {
 			'className' => 'Atividade', 
 			'foreignKey' => 'tipo_atividade_id' ) 
 	);
-
-
-
 	/*----------------------------------------
 	 * Validation
 	 ----------------------------------------*/
 	
-	public $validate 		= 	array();
-
+	public $validate 		= 	array(
+		'nome' => array('rule' => 'notEmpty','message' => 'Este Campo não pode ser Vazio!'),
+		'id' => array('rule' => 'notEmpty','message' => 'Este Campo não pode ser Vazio!'),
+	);
 	
 	
 	public function beforeSave(){
-
 	}
 	
 }	
-
 ?>
