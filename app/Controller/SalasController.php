@@ -35,6 +35,12 @@ class SalasController extends AppController {
     
     public function view($id = null) {
     	
+    	$this->Sala->contain();
+    	$sala = $this->Sala->find( 'first', array('conditions' => array('Sala.id' => $id)));
+    	$departamento = $this->Departamento->find('first', array(
+    			'conditions' => array('Departamento.id' => $sala['Sala']['departamento_id'])));
+    	
+		$this->set(compact("sala","departamento"));
     }
 
     public function add(){
