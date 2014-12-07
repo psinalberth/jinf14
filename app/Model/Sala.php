@@ -6,22 +6,22 @@ class Sala extends AppModel {
 	 * Atributtes
 	 ----------------------------------------*/ 
 	
-	public $name 			=	'Sala';
-
-	public $useTable		=    'salas';
-
-	public $label			=	'Usuário';
+	public $name = 'Sala';
+	public $useTable = 'salas';
+	public $label = 'Usuário';
+	//public $primaryKey = 'id';
 
 	
 	/*----------------------------------------
 	 * Associations
 	 ----------------------------------------*/ 
-	public $hasMany = array( 
-		'Sala' => array( 
-			'className' => 'Sala', 
-			'foreignKey' => 'sala_id' 
-		)
-	);	
+	
+	public $belongsTo = array(
+			'Departamento' => array(
+					'className' => 'Departamento',
+					'foreignKey' => 'departamento_id'
+			)
+	);
 	
 	/*----------------------------------------
 	 * Validation
@@ -51,7 +51,6 @@ class Sala extends AppModel {
 
 		
 	}
-	
 }	
 
 ?>
