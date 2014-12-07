@@ -22,6 +22,12 @@ class Atividade extends AppModel {
 			'foreignKey' => 'tipo_atividade_id' 
 		)
 	);	
+	public $hasMany = array( 
+		'Agenda' => array( 
+			'className' => 'Agenda', 
+			'foreignKey' => 'atividade_cod_ativ' 
+		)
+	);	
 	
 	/*----------------------------------------
 	 * Validation
