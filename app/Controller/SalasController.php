@@ -72,10 +72,45 @@ class SalasController extends AppController {
     
     public function edit($id = null) {
     	
+    	$this->Sala->id = $id;
+    	
+    	if ($this->request->isGet()) {
+    			
+    		$this->Sala->contain();
+    		$this->data = $this->Sala->findById($id);
+    	
+    	} else {
+    			
+    		if ($this->Sala->validates()) {
+    				
+    			if ($this->Sala->save($this->request->data)) {
+    					
+    				$this->setMessage('saveSuccess', 'Sala');
+    				$this->redirect(array('controller' => $this->name, 'action' => 'view', $this->Sala->id));
+    					
+    			} else
+    					
+    				$this->setMessage('saveError', 'Sala');
+    				
+    		} else {
+    				
+    			$this->setMessage('validateError');
+    		}
+    	}
+    	
+    	$this->set("departamento", $this->Departamento->find('list', array('fields'=> array('id','name'))));
     }
     
     public function delete($id = null) {
     	
+    	if($this->Sala->delete($id))
+    			
+    		$this->setMessage('deleteSuccess', 'Sala');
+    	
+    	else
+    		$this->setMessage('saveError', 'Sala');
+    		
+    	$this->redirect(array('controller' => $this->name, 'action' => 'index'));
     }
     
 }
