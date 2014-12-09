@@ -13,4 +13,4 @@
 	
 </div>
 
-<?php echo $this->element( "submit", array( 'cancel' => '/users' ) ) ?>
+<?php echo $this->element( "submit", array( 'cancel' => '/Area' ) ) ?>
