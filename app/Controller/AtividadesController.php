@@ -14,7 +14,7 @@ class AtividadesController extends AppController{
 	
 	public $submenu	= array( 'index', 'add');
 
-	public $uses = array('Atividade', 'TipoAtividade');
+	public $uses = array('Atividade', 'TipoAtividade', 'Agenda', 'Profile');
 
 	
 	/*----------------------------------------
@@ -22,7 +22,6 @@ class AtividadesController extends AppController{
 	 ----------------------------------------*/
 	
 	public function index(){
-		//pr($this->Atividade->find('all'));
 		$this->checkAccess( $this->name, __FUNCTION__ );
 		$this->paginate[ 'fields' ] = array( 'Atividade.nome_atividade', 'Atividade.descricao', 'Atividade.duracao', 'Atividade.vagas','Atividade.id', 'TipoAtividade.nome');
 		$this->paginate[ 'order' ] = "Atividade.id";
@@ -87,19 +86,18 @@ class AtividadesController extends AppController{
 			$this->Session->setFlash( "Você não pode <strong>editar</strong> a Atividade <strong>Administrador</strong>.", "default", array( 'class' => 'error' ) );
 			$this->redirect( array( 'controller' => $this->name, 'action' => 'view', 1 ) );
 		}
-		
 		$this->Atividade->id = $id;
 		if( $this->request->is('get') ){
 			$this->request->data = $this->Atividade->read();			
 		} else {
 			if( $this->Atividade->validates() ){
-				if(!$this->Atividade->find( 'list', array('conditions' => array('Atividade.nome_atividade' => $this->request->data('Atividade.nome_atividade'))))){
+				//if(!$this->Atividade->find( 'list', array('conditions' => array('Atividade.nome_atividade' => $this->request->data('Atividade.nome_atividade'))))){
 					if( $this->Atividade->save( $this->request->data ) ){
 						
 						$this->setMessage( 'saveSuccess', 'Atividade' );
 						$this->redirect( array( 'controller' => $this->name, 'action' => 'view', $id ) );
 					}	
-				} else					
+				/*}*/ else					
 					$this->setMessage( 'saveError', 'Atividade' );
 			} else				
 				$this->setMessage( 'validateError' );
