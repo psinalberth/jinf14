@@ -15,7 +15,19 @@ class User extends AppModel {
 	 ----------------------------------------*/ 
 	
 	public $belongsTo 		= 	array( 'Profile' );
-	
+        
+        public $hasMany                 =       array('Curso');
+
+        public $hasAndBelongsToMany = array(
+            'Agenda' =>
+                array(
+                    'className' => 'Agenda',
+                    'joinTable' => 'Inscricoes',
+                    'foreignKey' => 'user_id',
+                    'associationForeignKey' => 'programacao_id',
+                )
+        );
+
 	/*----------------------------------------
 	 * Validation
 	 ----------------------------------------*/
@@ -26,8 +38,7 @@ class User extends AppModel {
 			
 			'rule'		=> 'notEmpty',
 			'message'	=> 'Preencha Nome'
-		),
-		
+		),		
 		'email' => array(
 		
 			'notEmpty' 	=> array(
@@ -105,7 +116,15 @@ class User extends AppModel {
 				
 			'rule'	=>	'passwordConfirm',
 			'message'	=>	'Senha de Confirmação não confere'
-		)
+		),  
+            
+               'Agenda' =>  array( 
+                   'multiple' => array(
+                        'rule' => array('multiple', array('min'=>1)), 
+                        'required' => true,
+                        'message'  => 'Você precisa escolher pelo menos um Atividade'
+                  )
+                ),
 	);
 
 	public function passwordConfirm( $check ){
@@ -203,6 +222,13 @@ class User extends AppModel {
 			}
 		}
 
+                
+                foreach($this->hasAndBelongsToMany as $k => $v) { 
+                    if(isset($this->data[$k][$k])) 
+                    { 
+                       $this->data[$this->alias][$k] = $this->data[$k][$k];
+                    } 
+                } 
 		return true;
 	}
 	

@@ -1,44 +1,28 @@
-<?php echo $this->Form->create( null, array( 'class' => 'form-horizontal' ) ); ?>
+<?php echo $this->Form->create('Agenda', array( 'controller' => 'nscricoes', 'class' => 'form-horizontal' ) ); ?>
 
 <div class="row">
 	<div class="span6">
-        
-        <?php if ($tipo_atividades):?>
-            <?php foreach ($tipo_atividades as $tipo_atividade): ?>
-            <h2><?=$tipo_atividade['TipoAtividade']['nome']?></h2>
-                <?php 
-                     foreach ($tipo_atividade['Atividade'] as $atividade):
-                        //$options[] = array($atividade['id'] => $atividade['nome_atividade']);
-                     
-                     echo $this->Form->input("Atividade.{$atividade['nome_atividade']}", array('type' => 'checkbox', 'options' => array($atividade['id'] => $atividade['nome_atividade'])));
-                      endforeach;
-                ?>
-            
-            <?php endforeach;?>
-        <?php endif;?>
-	<?php
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
+         <h2>Dados participante</h2>
+ 	<?php
+		print $this->BForm->input( 'User.name', array( 'label' => 'Nome:', 'placeholder' => 'Digite aqui seu Nome' ) );
 		print $this->BForm->input( 'User.email', array( 'label' => 'E-mail', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		print $this->BForm->input( 'User.nome', array( 'label' => 'Nome', 'placeholder' => 'Digite aqui seu Nome' ) );
-		
-		?>
+		print $this->BForm->input( 'User.telefone', array( 'label' => 'Telefone:', 'placeholder' => 'Digite aqui seu Nome' ) );
+		print $this->BForm->input( 'User.curso_id', array( 'label' => 'Curso:', 'type' => 'select', 'options' => $cursos, 'empty' => '--' ));
+        ?>       
 
+       <?php if ($options_checkbox_atividades):?>
+         <div class="control-group">
+             <fieldset>
+            <?php
+ 
+                    print $this->Form->label( 'Agenda', 'Atividades:', array( 'class' => 'control-label' ) );
+                    print $this->Form->input( 'User.Agenda', array( "label" => false,'type'=>'select', 'div' => 'controls agenda', 'escape' => false, 'multiple' => 'checkbox', 'options' => $options_checkbox_atividades) );
+            ?>
+            </fieldset>     
+        <?php endif;?>
+        </div>
 	</div>
 
 </div>
 
-<?php echo $this->element( "submit", array( 'cancel' => '/atividades' ) ) ?>
+<?php echo $this->element( "submit", array( 'cancel' => '/inscricoes' ) ) ?>
