@@ -41,7 +41,7 @@ class InscricoesController extends AppController{
 
                $this->request->data['User']['profile_id'] = 3;
                 $this->User->create( $this->request->data );
-
+             
                 if( $this->User->validates() ){
                         
                         if( $this->User->saveAll() ){
@@ -53,7 +53,12 @@ class InscricoesController extends AppController{
                                 $this->setMessage( 'saveError', 'Profile' );
 
                 } else
-                        pr($this->User->validationErrors);
+                        if(!empty($this->User->validationErrors['horario_conflito'])){
+                            $this->set('erro_horario_conflito', $this->User->validationErrors['horario_conflito'][0]);
+                        }
+                        if(!empty($this->User->validationErrors['vagas'])){
+                            $this->set('erro_vagas', $this->User->validationErrors['vagas'][0]);
+                        }
                         $this->setMessage( 'validateError' );
         }
 		        
@@ -141,6 +146,7 @@ class InscricoesController extends AppController{
            }
         }
         
+        $options_checkbox_atividades = array();
         foreach ($atividades as $tipo_atividade => $atividade){
             foreach ($atividade as $ativ){
                 $data = CakeTime::format($ativ['data'], '%d/%m/%Y');

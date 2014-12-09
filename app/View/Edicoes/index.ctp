@@ -18,7 +18,7 @@
 
 	<tr>
 		<td><i class="icon-user"></i></td>
-		<td><?php echo $this->Html->link( $edicao[ 'Edicao' ][ 'nome' ], "/edicoes/view/{$edicao['Edicao']['cod_edicao']}", array( 'escape' => false ) ) ?></td>
+		<td><?php echo $this->Html->link( $edicao[ 'Edicao' ][ 'nome' ], "/edicoes/view/{$edicao['Edicao']['id']}", array( 'escape' => false ) ) ?></td>
 		<td><?php echo $edicao[ 'Edicao' ][ 'data_ini' ] ?></td>
 		<td><?php echo $edicao[ 'Edicao' ][ 'data_fim' ] ?></td>
 

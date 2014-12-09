@@ -47,7 +47,7 @@ class AgendaController extends AppController{
 			        'alias' => 'Edicao',
 			        'type' => 'INNER',
 			        'conditions' => array(
-			            'Edicao.cod_edicao = Agenda.cod_edicao',
+			            'Edicao.id = Agenda.edicao_id',
 			            'Edicao.ano' => $this->request->data['Agenda']['ano']
 
 			        )
@@ -56,7 +56,7 @@ class AgendaController extends AppController{
 			        'alias' => 'Atividade',
 			        'type' => 'INNER',
 			        'conditions' => array(
-			            'Atividade.id = Agenda.atividade_cod_ativ',
+			            'Atividade.id = Agenda.atividade_id',
 			        )
 			    ),
 			    array('table' => 'tipo_atividade',
@@ -71,7 +71,9 @@ class AgendaController extends AppController{
 
 			$this->set( "programacao", $this->paginate( "Agenda" ) );
         }else{
-     $ano_atual = $this->Edicao->find('all', array('order' => 'Edicao.ano DESC', 'limit' => 1));
+            
+        $ano_atual = $this->Edicao->find('first', array('order' => 'Edicao.ano DESC', 'contain' => array()));
+
 	$this->checkAccess( $this->name, __FUNCTION__ );
 			$this->paginate[ 'fields' ] = array( 
 				'Agenda.data', 'Agenda.horario_ini', 'Agenda.horario_fim',
@@ -85,7 +87,7 @@ class AgendaController extends AppController{
 			        'alias' => 'Atividade',
 			        'type' => 'INNER',
 			        'conditions' => array(
-			            'Atividade.id = Agenda.atividade_cod_ativ',
+			            'Atividade.id = Agenda.atividade_id',
 			        )
 			    ),
 			    array('table' => 'tipo_atividade',
@@ -106,15 +108,15 @@ class AgendaController extends AppController{
 			        'alias' => 'Edicao',
 			        'type' => 'INNER',
 			        'conditions' => array(
-			            'Edicao.cod_edicao = Agenda.cod_edicao',
-			            'Edicao.ano' => $ano_atual[0]['Edicao']['ano']
+			            'Edicao.id = Agenda.edicao_id',
+			            'Edicao.ano' => $ano_atual['Edicao']['ano']
 
 			        )
 			    )		
 			);
 			$paginacao = $this->paginate( "Agenda" );
 			if (empty($paginacao)){
-				$this->set( "programacao", $ano_atual );				
+				$this->set( "programacao",  $ano_atual['Edicao']['ano'] );				
 			}else
 				$this->set( "programacao", $paginacao );
 
@@ -167,7 +169,7 @@ class AgendaController extends AppController{
 		$this->set('data', $data);
 		$this->set( "atividades", $this->Atividade->find('list', array('fields'=> array('id','nome_atividade'))));
 		$this->set( "salas", $this->Sala->find('list', array('fields'=> array('id','descricao'))));
-		$this->set( "edicoes", $this->Edicao->find('list',array('fields'=> array('cod_edicao','ano') )));
+		$this->set( "edicoes", $this->Edicao->find('list',array('fields'=> array('id','ano') )));
 
 	}
 	

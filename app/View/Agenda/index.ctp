@@ -25,7 +25,7 @@ $data_ini++;
   <ul class="nav nav-tabs">
     	<?php $data = $programacao[0]['Edicao']['data_ini'];?>
 		<?php while ($data <= $programacao[0]['Edicao']['data_fim']):?>
-	    <li  class="<?php if ($i == 0) echo 'active'?>"><a href="#tab<?php echo $i ?>" data-toggle="tab"><?php  echo 'Dia '. $data;?></a></li>
+	    <li  class="<?php if ($i == 0) echo 'active'?>"><a href="#tab<?php echo $i ?>" data-toggle="tab"><?php  echo 'Dia '. $this->Time->format('d/m/y',$data);?></a></li>
 	    <?php $abas[] =  $data;?>
 		<?php $data++; $i++; endwhile; ?>
   </ul>
