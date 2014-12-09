@@ -14,7 +14,7 @@ class Inscricao extends AppModel{
     //put your code here
     public $name = 'Inscricao';
     
-    public $useTable = 'inscricoes';
+    public $useTable = 'inscricao';
     
     public $label = 'Inscrição';
     
@@ -25,7 +25,7 @@ class Inscricao extends AppModel{
             ),
             'Agenda' => array( 
                     'className' => 'Agenda', 
-                    'foreignKey' => 'programcao_id' 
+                    'foreignKey' => 'programacao_id' 
             )
     );
     

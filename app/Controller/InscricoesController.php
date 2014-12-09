@@ -10,6 +10,7 @@
  *
  * @author Márcio Vennan
  */
+App::uses('CakeTime', 'Utility');
 class InscricoesController extends AppController{
     //put your code here
     public $name = 'Inscricoes';
@@ -37,7 +38,8 @@ class InscricoesController extends AppController{
         $this->layout = 'inscricao';
         
         if( $this->request->isPost() ){
-               //pr($this->request->data); die;
+
+               $this->request->data['User']['profile_id'] = 3;
                 $this->User->create( $this->request->data );
 
                 if( $this->User->validates() ){
@@ -141,14 +143,18 @@ class InscricoesController extends AppController{
         
         foreach ($atividades as $tipo_atividade => $atividade){
             foreach ($atividade as $ativ){
-                $txt = "{$ativ['nome_atividade']} ( Vagas ({$ativ['vagas']}) - {$ativ['data']} de {$ativ['horario_ini']} às {$ativ['horario_fim']} )";
+                $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
+                $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
+                $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
+                
+                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$ativ['vagas']})";
                 $options_checkbox_atividades[$tipo_atividade][$ativ['programacao_id']] = $txt ;
             }
         }
         
         $this->set('atividades',$atividades);
         $this->set('options_checkbox_atividades',$options_checkbox_atividades);
-        $this->set('cursos', $this->Curso->find('list', array('fields' => array('nome_curso'))));
+        $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
     }
     
     private function checaEdicao($atividades)

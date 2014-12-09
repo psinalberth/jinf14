@@ -22,7 +22,7 @@ class User extends AppModel {
             'Agenda' =>
                 array(
                     'className' => 'Agenda',
-                    'joinTable' => 'Inscricoes',
+                    'joinTable' => 'inscricao',
                     'foreignKey' => 'user_id',
                     'associationForeignKey' => 'programacao_id',
                 )
@@ -226,9 +226,31 @@ class User extends AppModel {
                 foreach($this->hasAndBelongsToMany as $k => $v) { 
                     if(isset($this->data[$k][$k])) 
                     { 
-                       $this->data[$this->alias][$k] = $this->data[$k][$k];
+                       $programaca_id = $this->data[$this->alias][$k] = $this->data[$k][$k];
+                       
+                       $atividade = $this->Agenda->find('first', array(
+                           'conditions' => array(
+                               'Agenda.id' => $programaca_id
+                           ),
+                           'fields' => array('Atividade.id', 'Atividade.vagas', 'Agenda.horario_ini', 'Agenda.horario_fim', 'Agenda.data')
+                       ));
+                       
+                       
+                       $horarios_ini_escolhidos_participante[] = "{$atividade['Agenda']['data']}/{$atividade['Agenda']['horario_ini']}";
+                       pr($horarios_ini_escolhidos_participante); die;
+                       if ($atividade['Atividade']['vagas'] == 0){
+                           $this->validationErrors['vagas'] = 'Total de vagas já preenchidas para alguma Atvidade escolhida!';
+                           return false;
+                       }
+                       
                     } 
-                } 
+                }
+                
+                //Se a função array_unique retornar alguma coisa é porque existe horários duplicados no array, consequentemente há conflitos de horário!
+                if (!empt(array_unique($input))){
+                    $this->validationErrors['horario_conflito'] = 'Você deve escolher hoŕários que não conflitem!';
+                    return false;
+                }
 		return true;
 	}
 	

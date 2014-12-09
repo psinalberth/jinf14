@@ -14,5 +14,5 @@ class Curso extends AppModel{
     //put your code here
     public $name = 'Curso';
     
-    public $useTable = 'curso';
+    public $useTable = 'cursos';
 }

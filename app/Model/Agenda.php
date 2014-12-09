@@ -21,11 +21,11 @@ class Agenda extends AppModel {
 	public $belongsTo = array( 
 		'Atividade' => array( 
 			'className' => 'Atividade', 
-			'foreignKey' => 'atividade_cod_ativ' 
+			'foreignKey' => 'atividade_id' 
 		),
 		'Edicao' => array( 
 			'className' => 'Edicao', 
-			'foreignKey' => 'cod_edicao' 
+			'foreignKey' => 'edicao_id' 
 		),
 		'Sala' => array( 
 			'className' => 'Sala', 
