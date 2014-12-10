@@ -1,5 +1,5 @@
 <?php
-
+ 
 class Participante extends AppModel {
 	
 	/*----------------------------------------
