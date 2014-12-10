@@ -8,14 +8,14 @@ class Sala extends AppModel {
 	
 	public $name = 'Sala';
 	public $useTable = 'salas';
-	public $label = 'Usuário';
+	public $label = 'Sala';
 	//public $primaryKey = 'id';
 
 	
 	/*----------------------------------------
 	 * Associations
-	 ----------------------------------------*/ 
-	
+	 ----------------------------------------*/
+
 	public $belongsTo = array(
 			'Departamento' => array(
 					'className' => 'Departamento',
@@ -28,10 +28,7 @@ class Sala extends AppModel {
 	 ----------------------------------------*/
 	
 	public $validate 		= 	array();
-
 	
-	
-
 
 
 	/*----------------------------------------
@@ -48,8 +45,7 @@ class Sala extends AppModel {
 	}
 	
 	public function beforeSave(){
-
-		
+	
 	}
 }	
 

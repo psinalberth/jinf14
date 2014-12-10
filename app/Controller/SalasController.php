@@ -13,7 +13,6 @@
 class SalasController extends AppController {
     
     public $name = "Salas";
-    public $label = 'Salas';
     public $uses = array('Sala', 'Departamento');
     
     public function index() {
