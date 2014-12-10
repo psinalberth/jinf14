@@ -26,7 +26,8 @@
 		print $this->BForm->input( 'Agenda.horario_fim', array( 'label' => 'Horário Fim', 'type' => 'text'  ) );
 		print $this->BForm->input( 'Agenda.atividade_id', array( 'label' => 'Atividade', 'empty' => '-- Selecione --' , 'options'=> $atividades) );
 		print $this->BForm->input( 'Agenda.sala_id', array( 'label' => 'Sala', 'empty' => '-- Selecione --' , 'options'=> $salas) );
-		print $this->BForm->input( 'Agenda.edicao_id', array( 'label' => 'Ano', 'empty' => '-- Selecione --' , 'options'=> $edicoes) );		
+		print $this->BForm->input( 'Agenda.edicao_id', array( 'label' => 'Edição', 'empty' => '-- Selecione --' , 'options'=> $edicoes) );		
+		print $this->BForm->input( 'Agenda.total_vagas', array( 'label' => 'Total Vagas', 'type' => 'text') );		
 		?>
 
 	</div>

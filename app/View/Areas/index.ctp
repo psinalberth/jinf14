@@ -1,12 +1,14 @@
-<table class="list medium">
-	
-<tr class="head">
+<table class="table table-striped">
+        <thead>
+        <tr>
 	<th></th>
-	<th><?php echo $this->Paginator->sort( "Controller", "controller" ) ?></th>
-	<th><?php echo $this->Paginator->sort( "Action", "action" ) ?></th>
+	<th><?php echo $this->Paginator->sort( "Area.controller", "controller" ) ?></th>
+	<th><?php echo $this->Paginator->sort( "Area.action", "action" ) ?></th>
 	<th class="actions">A&ccedil;&otilde;es</th>
-</tr>
-
+        
+	</tr>
+	</thead>
+        <tbody>
 <?php foreach( $areas as $i => $area ): $i % 2 ? $class = null : $class = ' class="altrow"'; ?>
 
 <tr<?php echo $class ?>>
@@ -21,6 +23,7 @@
 	</td>
 </tr>
 	
-<?php endforeach; print $this->element( "paginationButtons", array( 'mode' => 'table', 'size' => 4 ) ) ?>
-
+<?php endforeach; ?>
+	</tbody>
 </table>
+<?php print $this->element( "pagination") ?>

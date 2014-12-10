@@ -25,11 +25,12 @@ class AgendaController extends AppController{
 	
 	public function index(){
 
-
+	$this->checkAccess( $this->name, __FUNCTION__ );
+        
 		if ($this->request->isPost()){
 			$this->checkAccess( $this->name, __FUNCTION__ );
 			$this->paginate[ 'fields' ] = array( 
-				'Agenda.data', 'Agenda.horario_ini', 'Agenda.horario_fim',
+				'Agenda.data', 'Agenda.horario_ini', 'Agenda.horario_fim','Agenda.vagas_restantes',
 				'Agenda.horario_fim', 'Atividade.nome_atividade', 'TipoAtividade.nome',
 				'Sala.descricao', 
 				'Edicao.nome', 'Edicao.data_ini', 'Edicao.data_fim'
@@ -72,11 +73,10 @@ class AgendaController extends AppController{
 			$this->set( "programacao", $this->paginate( "Agenda" ) );
         }else{
             
-        $ano_atual = $this->Edicao->find('first', array('order' => 'Edicao.ano DESC', 'contain' => array()));
+        $ano_atual = $this->Edicao->find('all', array('order' => 'Edicao.ano DESC'));
 
-	$this->checkAccess( $this->name, __FUNCTION__ );
 			$this->paginate[ 'fields' ] = array( 
-				'Agenda.data', 'Agenda.horario_ini', 'Agenda.horario_fim',
+				'Agenda.data', 'Agenda.horario_ini', 'Agenda.horario_fim','Agenda.vagas_restantes',
 				'Agenda.horario_fim', 'Atividade.nome_atividade', 'TipoAtividade.nome',
 				'Sala.descricao', 
 				'Edicao.nome', 'Edicao.data_ini', 'Edicao.data_fim'
@@ -109,14 +109,14 @@ class AgendaController extends AppController{
 			        'type' => 'INNER',
 			        'conditions' => array(
 			            'Edicao.id = Agenda.edicao_id',
-			            'Edicao.ano' => $ano_atual['Edicao']['ano']
+			            'Edicao.ano' => $ano_atual[0]['Edicao']['ano']
 
 			        )
 			    )		
 			);
 			$paginacao = $this->paginate( "Agenda" );
 			if (empty($paginacao)){
-				$this->set( "programacao",  $ano_atual['Edicao']['ano'] );				
+				$this->set( "programacao",  $ano_atual);				
 			}else
 				$this->set( "programacao", $paginacao );
 

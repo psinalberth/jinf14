@@ -17,6 +17,12 @@ class InscricoesController extends AppController{
     
     public $uses = array('Atividade', 'Agenda', 'TipoAtividade', 'Edicao', 'Curso', 'User', 'Inscricao');
     
+    public $setMenu = "Inscricoes";
+    
+    public $label = 'Inscrições';
+	
+    public $submenu = array( 'index', 'add' );
+    
     public $ultimaEdicao;
     
     function beforeFilter() { 
@@ -32,6 +38,10 @@ class InscricoesController extends AppController{
         
         $this->Security->validatePost = false;
         $this->Security->csrfCheck = false;
+    }
+    
+    public function index(){
+        
     }
     
     function add(){

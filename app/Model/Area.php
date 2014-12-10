@@ -58,5 +58,6 @@ class Area extends AppModel {
 		
 		return $areasLista;
 	}
+
 	
 }
