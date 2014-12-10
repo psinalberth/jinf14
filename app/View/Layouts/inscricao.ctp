@@ -47,7 +47,7 @@
 	</div>
 </div>
     <br>
-    <h1>Inscrição JINF 2014</h1>
+    <h1>Inscrição JINF'14</h1>
         
 
 <div id="middle">

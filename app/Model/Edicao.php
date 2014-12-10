@@ -12,7 +12,7 @@ class Edicao extends AppModel {
 
 	public $label			=	'Usuário';
 
-  	public $primaryKey        = 'cod_edicao';
+  	public $primaryKey        = 'id';
 	
 	/*----------------------------------------
 	 * Associations
@@ -21,7 +21,7 @@ class Edicao extends AppModel {
 	public $hasMany = array( 
 		'Agenda' => array( 
 			'className' => 'Agenda', 
-			'foreignKey' => 'cod_edicao' 
+			'foreignKey' => 'edicao_id' 
 		)
 	);	
 	

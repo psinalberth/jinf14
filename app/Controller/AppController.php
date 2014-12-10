@@ -72,10 +72,11 @@ class AppController extends Controller {
 		$this->set( "title_for_layout", $this->title );
 		$this->set( "submenu", $this->submenu );
 		$this->set( "subtitle", $this->subtitle );
+     
 	}
 	
 	public function beforeFilter(){
-
+            $this->Security->csrfCheck = false;
 	    if( $this->Auth->user() ){
 
 			if( !$this->Session->check( "Auth.User.Profile" ) ){

@@ -10,7 +10,7 @@ class Atividade extends AppModel {
 
 	public $useTable		=    'atividade';
 
-	public $label			=	'Usuário';
+	public $label			=	'Atividade';
 
 	
 	/*----------------------------------------
@@ -22,18 +22,24 @@ class Atividade extends AppModel {
 			'foreignKey' => 'tipo_atividade_id' 
 		)
 	);	
-	public $hasMany = array( 
-		'Agenda' => array( 
-			'className' => 'Agenda', 
-			'foreignKey' => 'atividade_cod_ativ' 
-		)
-	);	
+	//public $hasMany = array( 
+	//	'Agenda' => array( 
+	//		'className' => 'Agenda', 
+	//		'foreignKey' => 'atividade_cod_ativ' 
+	//	)
+	//);	
 	
 	/*----------------------------------------
 	 * Validation
 	 ----------------------------------------*/
 	
-	public $validate 		= 	array();
+	public $validate 		= 	array(
+		'nome_atividade' => array('rule' => 'notEmpty','message' => 'Este Campo não pode ser Vazio!'),
+		'tipo_atividade_id' => array('rule' => 'notEmpty','message' => 'Este Campo não pode ser Vazio!'),
+		'duracao' => array('notEmpty' => array('rule' => 'notEmpty','message' => 'Este Campo não pode ser Vazio!'), 'numeric'=> array('rule' =>'numeric', 'message' => 'Somente números')),
+		'vagas' => array('notEmpty' => array('rule' => 'notEmpty','message' => 'Este Campo não pode ser Vazio!'), 'numeric'=> array('rule' =>'numeric', 'message' => 'Somente números'))
+
+	);
 
 	
 	

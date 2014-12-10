@@ -1,33 +1,19 @@
-<?php
- 	print $this->Form->create( "Area", array( "action" => "edit", "class" => "form" ) );
-	print $this->Form->hidden( "Area.id" );
-?>
+<?php echo $this->Form->create( 'Area', array( 'class' => 'form-horizontal' ) ); ?>
 
-<table class="visualizar auto">
-	<tr>
-		<td class="label"><?php echo $this->Form->label( "Area.controller", "Controller:" ) ?></td>
-		<td class="input"><?php echo $this->Form->input( "Area.controller", array( 'label' => false, 'class' => 'text' ) ) ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $this->Form->label( "Area.controller_label", "Controller Label:" ) ?></td>
-		<td><?php echo $this->Form->input( "Area.controller_label",  array( 'label' => false, 'class' => 'text' ) ) ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $this->Form->label( "Area.action", "Action:" ) ?></td>
-		<td><?php echo $this->Form->input( "Area.action",  array( 'label' => false, 'class' => 'text' ) ) ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $this->Form->label( "Area.action_label", "Action Label:" ) ?></td>
-		<td><?php echo $this->Form->input( "Area.action_label",  array( 'label' => false, 'class' => 'text' ) ) ?></td>
-	</tr>
-	<tr>
-		<td colspan="2">
-		<?php
-		 	print $this->Form->submit( "SALVAR", array( 'class' => 'submit' ) );
-			print $this->Form->submit( "CANCELAR", array( 'class' => 'submit cancel' ) )
-		?>
-		</td>
-	</tr>
-</table>
+<div class="row">
+	<div class="span6">
+	<?php
+		print $this->BForm->input( 'Area.id', array( 'label' => 'Controller', 'type' => 'hidden' ) );
+		print $this->BForm->input( 'Area.controller', array( 'label' => 'Controller' ) );
+		print $this->BForm->input( 'Area.controller_label', array( 'label' => 'Controller Label') );
+		print $this->BForm->input( 'Area.action', array( 'label' => 'Action'));
+		print $this->BForm->input( 'Area.action_label', array( 'label' => 'Action Label' ) );
+		print $this->BForm->input( 'Area.appear', array( 'label' => 'Aparecer como menu' , 'type' => 'checkbox', 'required' => false) );
+		print $this->BForm->input( 'Area.parent_id', array( 'label' => 'Parecer abaixo de:' , 'type' => 'select', 'options' => $parent_id, 'empty' => '--', 'required' => false) );
+	?>
+	</div>
 
-<?php echo $this->Form->end() ?>
+	
+</div>
+
+<?php echo $this->element( "submit", array( 'cancel' => '/Area' ) ) ?>

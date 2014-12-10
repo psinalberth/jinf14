@@ -11,25 +11,27 @@ class Agenda extends AppModel {
 	public $useTable =    'programacao';
 
 	public $label = 'Agenda';
+  
 
 	/*----------------------------------------
 	 * Associations
 	 ----------------------------------------*/ 
-	
-	
+        
+        
 	public $belongsTo = array( 
 		'Atividade' => array( 
 			'className' => 'Atividade', 
-			'foreignKey' => 'atividade_cod_ativ' 
+			'foreignKey' => 'atividade_id' 
 		),
 		'Edicao' => array( 
 			'className' => 'Edicao', 
-			'foreignKey' => 'cod_edicao' 
+			'foreignKey' => 'edicao_id' 
 		),
 		'Sala' => array( 
 			'className' => 'Sala', 
 			'foreignKey' => 'sala_id' 
 		),
+
 		
 	);	
 	
@@ -43,7 +45,15 @@ class Agenda extends AppModel {
 	/*----------------------------------------
 	 * Methods
 	 ----------------------------------------*/
-	
+       public function beforeValidate($data){
+          //pr($data); die;
+       }	
+       
+       public function beforeSave() {
+           if($this->data){
+               $this->data['Agenda']['vagas_restantes'] = $this->data['Agenda']['total_vagas'];
+           }
+       }
 
 
 	
