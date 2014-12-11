@@ -48,6 +48,12 @@ class Agenda extends AppModel {
        public function beforeValidate($data){
           //pr($data); die;
        }	
+       
+       public function beforeSave() {
+           if($this->data){
+               $this->data['Agenda']['vagas_restantes'] = $this->data['Agenda']['total_vagas'];
+           }
+       }
 
 
 	

@@ -16,7 +16,17 @@
  
                     print $this->Form->label( 'Agenda', 'Atividades:', array( 'class' => 'control-label' ) );
                     print $this->Form->input( 'Agenda.Agenda', array( "label" => false,'type'=>'select', 'div' => 'controls agenda', 'escape' => false, 'multiple' => 'checkbox', 'options' => $options_checkbox_atividades) );
+            
+                    if (!empty ($erro_horario_conflito)){
+                        print '<div class="controls required error"><span style="color:#b94a48">' . $erro_horario_conflito . '</span></div>';
+  
+                    }
+                    
+                    if (!empty ($erro_vagas)){
+                        print '<div class="controls required error"><span style="color:#b94a48">' . $erro_vagas . '</span></div>';
+                    }
             ?>
+             
             </fieldset>     
         <?php endif;?>
         </div>

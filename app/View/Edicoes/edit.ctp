@@ -10,7 +10,7 @@
 
 	<?php
 		echo $this->Form->create( 'Edicao', array( 'class' => 'form-horizontal' ) );
-		print $this->Form->hidden( 'Edicao.cod_edicao' );
+		print $this->Form->hidden( 'Edicao.id' );
 		print $this->BForm->input( 'Edicao.nome', array( 'label' => 'Nome do Evento', 'placeholder' => 'Nome do Evento' ) );
 		print $this->BForm->input( 'Edicao.data_ini', array( 'label' => 'Data Inicio',  'placeholder' => "data inicio", 'type' => 'text') );
 		print $this->BForm->input( 'Edicao.data_fim', array( 'label' => 'Data Fim',  'placeholder' => "data fim", 'type' => 'text') );

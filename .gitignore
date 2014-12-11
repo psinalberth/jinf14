@@ -6,6 +6,7 @@ Thumbs.db
 
 # CakePHP database config
 /app/Config/database.php
+/app/Config/core.php
 
 # CakePHP temp files
 /app/tmp/cache/models/*

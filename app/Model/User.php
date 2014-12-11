@@ -27,8 +27,10 @@ class User extends AppModel {
                     'associationForeignKey' => 'programacao_id',
                 )
         );
+        
+        public $horariosEscolhidos;
 
-	/*----------------------------------------
+        /*----------------------------------------
 	 * Validation
 	 ----------------------------------------*/
 	
@@ -38,6 +40,16 @@ class User extends AppModel {
 			
 			'rule'		=> 'notEmpty',
 			'message'	=> 'Preencha Nome'
+		),		
+		'telefone' 	=> array(
+			
+			'rule'		=> 'notEmpty',
+			'message'	=> 'Preencha o telefone'
+		),		
+		'curso_id' 	=> array(
+			
+			'rule'		=> 'notEmpty',
+			'message'	=> 'Escolha um curso!'
 		),		
 		'email' => array(
 		
@@ -115,16 +127,13 @@ class User extends AppModel {
 		'passwordConfirm'	=>	array(
 				
 			'rule'	=>	'passwordConfirm',
-			'message'	=>	'Senha de Confirmação não confere'
+			'message'	=>	'Senha de Confirmação não confere.'
 		),  
             
-               'Agenda' =>  array( 
-                   'multiple' => array(
-                        'rule' => array('multiple', array('min'=>1)), 
-                        'required' => true,
-                        'message'  => 'Você precisa escolher pelo menos um Atividade'
-                  )
-                ),
+                'Agenda' => array(
+                    'rule' => array('multiple', array('min' => 1)),
+                    'message' => 'Você deve escolher pelo menos uma atividade.'
+                )
 	);
 
 	public function passwordConfirm( $check ){
@@ -223,34 +232,46 @@ class User extends AppModel {
 		}
 
                 
+                $horariosEscolhidos = array();
+                //pr($this->hasAndBelongsToMany); die;
                 foreach($this->hasAndBelongsToMany as $k => $v) { 
                     if(isset($this->data[$k][$k])) 
                     { 
-                       $programaca_id = $this->data[$this->alias][$k] = $this->data[$k][$k];
-                       
-                       $atividade = $this->Agenda->find('first', array(
-                           'conditions' => array(
-                               'Agenda.id' => $programaca_id
-                           ),
-                           'fields' => array('Atividade.id', 'Atividade.vagas', 'Agenda.horario_ini', 'Agenda.horario_fim', 'Agenda.data')
-                       ));
-                       
-                       
-                       $horarios_ini_escolhidos_participante[] = "{$atividade['Agenda']['data']}/{$atividade['Agenda']['horario_ini']}";
-                       pr($horarios_ini_escolhidos_participante); die;
-                       if ($atividade['Atividade']['vagas'] == 0){
-                           $this->validationErrors['vagas'] = 'Total de vagas já preenchidas para alguma Atvidade escolhida!';
-                           return false;
+                      foreach ($this->data[$k][$k] as $programacao_id){
+                           //echo $programaca_id;die;
+                           $atividade = $this->Agenda->find('first', array(
+                               'conditions' => array(
+                                   'Agenda.id' => $programacao_id
+                               ),
+                               'fields' => array('Atividade.id', 'Atividade.vagas', 'Agenda.horario_ini', 'Agenda.horario_fim', 'Agenda.data')
+                           ));
+                           
+                           //pr($atividade); 
+
+                           $horarios_ini_escolhidos_participante[] = "{$atividade['Agenda']['data']} {$atividade['Agenda']['horario_ini']}";
+                           $horarios_ini_escolhidos_participante[] = "{$atividade['Agenda']['data']} {$atividade['Agenda']['horario_fim']}";
+
+                           $timestamp_ini = strtotime($horarios_ini_escolhidos_participante[0]);
+                           $timestamp_fim = strtotime($horarios_ini_escolhidos_participante[1]);
+
+                           //Verifica Conflito Horários
+                           if (!$this->verificarConflitoHorario($horariosEscolhidos, $timestamp_ini,$timestamp_ini )){
+                               $this->validationErrors['horario_conflito'][] = 'Você deve escolher oficinas que não conflitem horário.';
+                           }
+
+                           $horariosEscolhidos[] = array($timestamp_ini,$timestamp_fim);
+                           //echo $k;
+                           //pr($horariosEscolhidos);
+                           //Verifica vagas
+                           if ($atividade['Atividade']['vagas'] == 0){
+                               $this->validationErrors['vagas'][] = 'Você deve escolher atividades com vagas disponíveis.';
+
+                           }
                        }
-                       
-                    } 
+                    }
+                    //pr($horariosEscolhidos);die;
                 }
                 
-                //Se a função array_unique retornar alguma coisa é porque existe horários duplicados no array, consequentemente há conflitos de horário!
-                if (!empt(array_unique($input))){
-                    $this->validationErrors['horario_conflito'] = 'Você deve escolher hoŕários que não conflitem!';
-                    return false;
-                }
 		return true;
 	}
 	
@@ -277,8 +298,43 @@ class User extends AppModel {
 		if( isset( $this->data[ $this->name ][ 'pass_switched' ] ) )
 			if( !$this->data[ $this->name ][ 'pass_switched' ] )
 				unset( $this->data[ $this->name ][ 'pass_switched' ] );
+                        
+               //Dimnuido vagas atividade
+               if (isset($this->data['Agenda']['Agenda'])){
+                    //pr($this->data);die;
+               }
 		
 		return true;
 	}
+        
+        public function verificarConflitoHorario($horariosEscolhidos, $timestamp_ini,$timestamp_fim ){
+                           
+
+            if (!empty($horariosEscolhidos)){
+                foreach ($horariosEscolhidos as $horarios){
+                    // pr($timestamp_ini);
+                    if ($timestamp_ini = $horarios[0]){
+                        return false;
+                    }
+                    if ($timestamp_ini = $horarios[1]){
+                        return false;
+                    }
+                    if ($timestamp_fim = $horarios[0]){
+                        return false;
+                    }
+                    if ($timestamp_fim = $horarios[1]){
+                        return false;
+                    }
+                    if ($timestamp_ini > $horarios[0] && $timestamp_ini < $horarios[1]  ){
+                        return false;
+                    }
+                    if ($timestamp_fim > $horarios[0] && $timestamp_fim < $horarios[1]  ){
+                        return false;
+                    }
+                }
+                
+            }
+            return true;
+        }
 	
 }

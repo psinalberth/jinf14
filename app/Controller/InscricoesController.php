@@ -17,6 +17,12 @@ class InscricoesController extends AppController{
     
     public $uses = array('Atividade', 'Agenda', 'TipoAtividade', 'Edicao', 'Curso', 'User', 'Inscricao');
     
+    public $setMenu = "Inscricoes";
+    
+    public $label = 'Inscrições';
+	
+    public $submenu = array( 'index', 'add' );
+    
     public $ultimaEdicao;
     
     function beforeFilter() { 
@@ -34,6 +40,10 @@ class InscricoesController extends AppController{
         $this->Security->csrfCheck = false;
     }
     
+    public function index(){
+        
+    }
+    
     function add(){
         $this->layout = 'inscricao';
         
@@ -41,11 +51,11 @@ class InscricoesController extends AppController{
 
                $this->request->data['User']['profile_id'] = 3;
                 $this->User->create( $this->request->data );
-
+             
                 if( $this->User->validates() ){
                         
-                        if( $this->User->saveAll() ){
-
+                        if( $this->User->save() ){
+                                pr($this->request->data); die;
                                 $this->Session->setFlash( 'Inscrição realizado com sucesso!', "default", array( 'class' => 'success' ) );
                                 $this->redirect( array( 'controller' => $this->name, 'action' => 'add' ) );
 
@@ -53,7 +63,12 @@ class InscricoesController extends AppController{
                                 $this->setMessage( 'saveError', 'Profile' );
 
                 } else
-                        pr($this->User->validationErrors);
+                        if(!empty($this->User->validationErrors['horario_conflito'])){
+                            $this->set('erro_horario_conflito', $this->User->validationErrors['horario_conflito'][0]);
+                        }
+                        if(!empty($this->User->validationErrors['vagas'])){
+                            $this->set('erro_vagas', $this->User->validationErrors['vagas'][0]);
+                        }
                         $this->setMessage( 'validateError' );
         }
 		        
@@ -141,6 +156,7 @@ class InscricoesController extends AppController{
            }
         }
         
+        $options_checkbox_atividades = array();
         foreach ($atividades as $tipo_atividade => $atividade){
             foreach ($atividade as $ativ){
                 $data = CakeTime::format($ativ['data'], '%d/%m/%Y');

@@ -1,34 +1,56 @@
 <?php
 
-class Sala extends AppModel {
+class Colaborador extends AppModel {
 	
 	/*----------------------------------------
 	 * Atributtes
 	 ----------------------------------------*/ 
 	
-	public $name = 'Sala';
-	public $useTable = 'salas';
-	public $label = 'Sala';
-	//public $primaryKey = 'id';
+	public $name 			=	'Colaborador';
+
+	public $useTable		=    'colaboradores';
+
+	public $label			=	'Colaborador';
 
 	
 	/*----------------------------------------
 	 * Associations
-	 ----------------------------------------*/
-
-	public $belongsTo = array(
-			'Departamento' => array(
-					'className' => 'Departamento',
-					'foreignKey' => 'departamento_id'
-			)
-	);
+	 ----------------------------------------*/ 
 	
+
+	public $belongsTo = array( 
+		'User' => array( 
+			'className' => 'User', 
+			'foreignKey' => 'user_id' 
+		),
+		'Agenda' => array( 
+			'className' => 'Agenda', 
+			'foreignKey' => 'programacao_id' 
+		)
+	);	
+	
+	/*public $hasMany = array(
+ 	'User' => array( 
+			'className' => 'User', 
+			'foreignKey' => 'user_id' 
+		),
+	'Agenda' => array( 
+			'className' => 'Agenda', 
+			'foreignKey' => 'programacao_id' 
+		)
+ );*/
+ 
+
+
 	/*----------------------------------------
 	 * Validation
 	 ----------------------------------------*/
 	
 	public $validate 		= 	array();
+
 	
+	
+
 
 
 	/*----------------------------------------
@@ -45,8 +67,10 @@ class Sala extends AppModel {
 	}
 	
 	public function beforeSave(){
-	
+
+		
 	}
+	
 }	
 
 ?>
