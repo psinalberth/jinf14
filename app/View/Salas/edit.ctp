@@ -5,7 +5,7 @@
 		<?php
 			print $this->BForm->input('Sala.descricao', array('label' => 'Descrição', 'placeholder' => 'Nome da Sala', 'style' => 'width: 100%'));
 			print $this->BForm->input('Sala.localidade', array('label' => 'Localização', 'placeholder' => 'Localização', 'style' => 'width: 100%'));
-			print $this->BForm->input('Sala.departamento_id', array( 'label' => 'Departamento', 'empty' => '-- Selecione --' , 'options'=> $departamento, 'style' => 'width: 103%'));
+			print $this->BForm->input('Sala.departamento_id', array( 'label' => 'Departamento','options'=> $departamento, 'style' => 'width: 103%'));
 		?>
 	</div>
 </div>
