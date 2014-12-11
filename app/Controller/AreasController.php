@@ -45,6 +45,8 @@ class AreasController extends AppController {
 				    $this->redirect( array( 'controller' => $this->name, 'action' => 'index' ) );
 			}
 		}
+                
+               $this->set('parent_id',$this->Area->find('list', array('fields' => array('id', 'controller_label'), 'conditions' => array('Area.appear' => 1))));
 	}
 	
 	public function edit( $id = null ){
@@ -60,8 +62,7 @@ class AreasController extends AppController {
 			$this->data = $this->Area->findById( $id );
 			
 		} else {
-			
-			$this->Area->create($this->data) ;
+			$this->Area->create($this->request->data) ;
 			
 			if( $this->Area->validates() ){
 				
@@ -73,6 +74,8 @@ class AreasController extends AppController {
 				$this->redirect( array( 'controller' => $this->name, 'action' => 'index' ) );
 			}
 		}
+                
+                $this->set('parent_id',$this->Area->find('list', array('fields' => array('id', 'controller_label'), 'conditions' => array('Area.appear' => 1))));
 	}
 	
 	public function delete( $id = null ){

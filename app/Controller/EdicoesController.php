@@ -23,7 +23,7 @@ class EdicoesController extends AppController{
 	public function index(){
 
 		$this->checkAccess( $this->name, __FUNCTION__ );
-		$this->paginate[ 'fields' ] = array( 'cod_edicao', 'nome', 'data_ini','data_fim' );
+		$this->paginate[ 'fields' ] = array( 'id', 'nome', 'data_ini','data_fim' );
 		$this->paginate[ 'order' ] = "Edicao.created DESC";
 		$this->set( "edicoes", $this->paginate( "Edicao" ) );
 	}
@@ -32,7 +32,7 @@ class EdicoesController extends AppController{
 		
 		$this->checkAccess( $this->name, __FUNCTION__ );
 
-		$user = $this->Edicao->findByCodEdicao( $id );
+		$user = $this->Edicao->findById( $id );
 
 		$this->set( "edicoes", $user );
 		
@@ -52,7 +52,7 @@ class EdicoesController extends AppController{
 				if( $this->Edicao->save( null, false ) ){
 					
 					$this->setMessage( 'saveSuccess', 'Edicao' );
-					$this->redirect( array( 'controller' => $this->name, 'action' => 'view', $this->Profile->id ) );
+					$this->redirect( array( 'controller' => $this->name, 'action' => 'view', $this->Edicao->getLastInsertId() ) );
 					
 				} else
 					$this->setMessage( 'saveError', 'Profile' );
@@ -77,7 +77,7 @@ class EdicoesController extends AppController{
 		if( !$this->request->isPut() ){
 			
 			$this->Edicao->contain( );
-			$this->data = $this->Edicao->findByCodEdicao( $id );
+			$this->data = $this->Edicao->findById( $id );
 			
 		} else {
 
