@@ -1,5 +1,6 @@
 <?php
- 
+ //autora: Bianca Maria
+ //
 class Participante extends AppModel {
 	
 	/*----------------------------------------
@@ -11,6 +12,8 @@ class Participante extends AppModel {
 	public $useTable = 'programacao';
         
         public $label = 'Usuario';
+        
+        private $bianca;
 	/*----------------------------------------
 	 * Associations
 	 ----------------------------------------*/ 
