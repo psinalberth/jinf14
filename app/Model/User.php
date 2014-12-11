@@ -300,9 +300,9 @@ class User extends AppModel {
 				unset( $this->data[ $this->name ][ 'pass_switched' ] );
                         
                //Dimnuido vagas atividade
-                if (isset($this->data['Agenda'])){
-                    die;
-                }
+               if (isset($this->data['Agenda']['Agenda'])){
+                    //pr($this->data);die;
+               }
 		
 		return true;
 	}

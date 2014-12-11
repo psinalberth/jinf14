@@ -6,6 +6,7 @@ Thumbs.db
 
 # CakePHP database config
 /app/Config/database.php
+/app/Config/core.php
 
 # CakePHP temp files
 /app/tmp/cache/models/*
@@ -20,3 +21,10 @@ Thumbs.db
 !/app/tmp/sessions/empty
 /app/tmp/tests/*
 !/app/tmp/tests/empty
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml

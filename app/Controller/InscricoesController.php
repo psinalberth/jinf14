@@ -54,8 +54,8 @@ class InscricoesController extends AppController{
              
                 if( $this->User->validates() ){
                         
-                        if( $this->User->saveAll() ){
-
+                        if( $this->User->save() ){
+                                pr($this->request->data); die;
                                 $this->Session->setFlash( 'Inscrição realizado com sucesso!', "default", array( 'class' => 'success' ) );
                                 $this->redirect( array( 'controller' => $this->name, 'action' => 'add' ) );
 
