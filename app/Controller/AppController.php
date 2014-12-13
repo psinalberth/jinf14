@@ -57,7 +57,7 @@ class AppController extends Controller {
     
     public $paginate	=	array( 'limit' => 20, 'order' => 'created DESC', 'contain' => false );
     
-    public $uses		=	array( 'Profile' );
+    public $uses		=	array( 'Profile', 'Edicao' );
 
 	public $submenu		=	array();
 	
@@ -80,12 +80,6 @@ class AppController extends Controller {
 	public function beforeFilter(){
             $this->Security->csrfCheck = false;
 
-            $this->ultimaEdicao = $this->Edicao->find('first', array(
-            	'fields' => array('Edicao.ano'),
-            	'order' => 'ano DESC',
-            	'contain'=> array()));
-             $this->ultimaEdicao = $this->ultimaEdicao['Edicao']['ano'];
-
 	    if( $this->Auth->user() ){
 
 			if( !$this->Session->check( "Auth.User.Profile" ) ){
@@ -97,7 +91,14 @@ class AppController extends Controller {
 
 			if( !$this->Auth->user( 'pass_switched' ) && $this->action != 'manageAccount' )
 				$this->redirect( array( 'controller' => 'users', 'action' => 'manageAccount' ) );
-		}
+
+                        $this->ultimaEdicao = $this->Edicao->find('first', array(
+                            'fields' => array('Edicao.ano'),
+                            'order' => 'ano DESC',
+                            'contain'=> array()));
+
+                        $this->ultimaEdicao = $this->ultimaEdicao['Edicao']['ano'];           
+            }
 	}
 	
 	/*----------------------------------------
