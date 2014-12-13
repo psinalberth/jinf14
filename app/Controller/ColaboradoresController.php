@@ -14,10 +14,9 @@ class ColaboradoresController extends AppController {
 	
 	public $submenu	= array( 'index', 'add' );
 
-	public $uses = array('Colaborador','Agenda','User','Atividade','TipoAtividade','Edicao');
+	public $uses = array('Colaborador','Agenda','User','Atividade','TipoAtividade','Edicao', 'Inscricao');
 
 	
-
 	/*----------------------------------------
 	 * Callbacks
 	 ----------------------------------------*/
@@ -271,6 +270,25 @@ class ColaboradoresController extends AppController {
 
 		}
 
+	public function indexlist( $name = null ){
+	
+	//	$this->checkAccess( $this->name, __FUNCTION__ );
+
+		$User = $this->User->findByName($name);
+		$Colaborador = $this->Colaborador->find('first', array('conditions' => array('Colaborador.user_id' => $User['User']['id'])));
+		
+		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->ultimaEdicao)));
+		
+		$atividade = $this->Atividade->find('first',array('conditions' => array('Atividade.id' => $agenda['Agenda']['atividade_id'])));
+		$agenda1 = $agenda['Agenda']['id'];
+
+		$pessoas = $this->Inscricao->query("Select *from inscricao join users where users.id = inscricao.user_id and inscricao.programacao_id = '{$agenda1}'");
+        
+		//pr($pessoas);
+		//die();
+
+		$this->set("pessoas",$pessoas);
+	}
 	/*----------------------------------------
 	 * Methods
 	 ----------------------------------------*/

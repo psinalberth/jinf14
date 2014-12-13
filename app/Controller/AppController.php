@@ -63,6 +63,8 @@ class AppController extends Controller {
 	
 	public $subtitle	=	null;
 
+	public $ultimaEdicao = null;
+
 	/*----------------------------------------
 	 * Callbacks
 	 ----------------------------------------*/
@@ -77,6 +79,13 @@ class AppController extends Controller {
 	
 	public function beforeFilter(){
             $this->Security->csrfCheck = false;
+
+            $this->ultimaEdicao = $this->Edicao->find('first', array(
+            	'fields' => array('Edicao.ano'),
+            	'order' => 'ano DESC',
+            	'contain'=> array()));
+             $this->ultimaEdicao = $this->ultimaEdicao['Edicao']['ano'];
+
 	    if( $this->Auth->user() ){
 
 			if( !$this->Session->check( "Auth.User.Profile" ) ){
