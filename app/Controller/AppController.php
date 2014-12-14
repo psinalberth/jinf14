@@ -63,8 +63,6 @@ class AppController extends Controller {
 	
 	public $subtitle	=	null;
 
-	public $ultimaEdicao = null;
-
 	/*----------------------------------------
 	 * Callbacks
 	 ----------------------------------------*/
@@ -93,11 +91,12 @@ class AppController extends Controller {
 				$this->redirect( array( 'controller' => 'users', 'action' => 'manageAccount' ) );
 
                         $this->ultimaEdicao = $this->Edicao->find('first', array(
-                            'fields' => array('Edicao.ano'),
+                            'fields' => array('Edicao.ano', 'Edicao.id'),
                             'order' => 'ano DESC',
                             'contain'=> array()));
-
-                        $this->ultimaEdicao = $this->ultimaEdicao['Edicao']['ano'];           
+                        
+                        $this->Session->write('ultima_dicao_ano', $this->ultimaEdicao['Edicao']['ano']);
+                        $this->Session->write('ultima_dicao_id', $this->ultimaEdicao['Edicao']['id']);         
             }
 	}
 	
@@ -223,5 +222,68 @@ class AppController extends Controller {
 		
 		$this->Session->setFlash( $str, "default", array( 'class' => $class ) );
 	}
+        
+        /*
+         * $model -> nome do modelo
+         * $fields -> os campos que irao ser utilizados na busca sao as chaves, e seus valores sao
+         * os valores a serem buscados
+         * $operator -> o operador logico entre os campos
+         * $similar -> caso tenham dois campos que utilizem um mesmo valor na busca
+         * $conditions -> condicoes adicionais
+         * Ex: codigo e cpf, o codigo foi passado pelo formulario, mas o cpf ira usar esse mesmo valor na busca
+         */
+        protected function filterPaginate($fields = array(),$operator = 'AND',$similar = null,$aditionalConditions = null ){
+            
+            $conditions[$operator] = array();
+            //pr($fields);
+            //se um campo tiver o mesmo valor para a busca que outro, ele é setado aqui
+            if(!empty($similar)){
+                foreach($similar as $i => $value){
+                    if(isset($fields[$i] ) && $fields[$i] != null && up($fields[$i]) != 'NULL' && $fields[$i] ){
+                        die;
+                        $param = $fields[$i];
+
+                        $conditions[$operator]['OR'] = array(
+                            "$i LIKE" => "%$param%",
+                            "$value LIKE" => "%$param%"
+                        );
+                        unset($fields[$i]);
+                    }
+                }
+            }
+
+            foreach($fields as $field => $value){
+                if(is_array($value)){
+                    switch($value[0]){
+                        case 'number':
+                            $value = (int)$value[1] ;
+                            if($value)
+                                $conditions[$operator]["$field"] = "$value";
+                    }
+                }else{
+                    if($value != '' && strtoupper($value) != 'NULL' && $value  ){
+
+//                        $value = $this->retira_acentos(strtoupper(Sanitize::clean($value) ) );
+                        $value = strtoupper($value);
+                        $conditions[$operator]["$field ILIKE"] = "%$value%";
+
+                    }
+                }
+
+            }
+            if(empty($conditions[$operator])){
+                return;
+            }
+
+
+            $this->paginate['conditions'] = $conditions;
+
+            if($aditionalConditions){
+                reset($aditionalConditions);
+                $key = key($aditionalConditions);
+                $this->paginate['conditions']['AND'][$key] = current($aditionalConditions);
+            }
+
+        }
 	
 }

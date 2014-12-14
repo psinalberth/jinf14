@@ -11,7 +11,7 @@
 		
 	print $this->Form->create( $model, $options );
 	print $this->Form->input( $model.".word", array( 'label' => 'Palavra-chave:', 'div' => false, 'class' => 'text' ) );
-	print $this->Form->input( $model.".field", array( 'label' => false, 'div' => false, 'class' => 'select', 'options' => $filter_fields, 'escape' => false ) );
+	//print $this->Form->input( $model.".field", array( 'label' => false, 'div' => false, 'class' => 'select', 'options' => $filter_fields, 'escape' => false ) );
 	print $this->Form->end( array( 'label' => 'Filtrar', 'class' => 'submit', 'div' => false ) );
 ?>
 </div>

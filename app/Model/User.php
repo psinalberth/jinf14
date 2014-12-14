@@ -16,7 +16,7 @@ class User extends AppModel {
 	
 	public $belongsTo 		= 	array( 'Profile' );
         
-        public $hasMany                 =       array('Curso');
+        //public $hasMany                 =       array('Curso');
 
         public $hasAndBelongsToMany = array(
             'Agenda' =>
@@ -232,7 +232,7 @@ class User extends AppModel {
 		}
 
                 
-                $horariosEscolhidos = array();
+                $horarios_escolhidos = array();
                 //pr($this->hasAndBelongsToMany); die;
                 foreach($this->hasAndBelongsToMany as $k => $v) { 
                     if(isset($this->data[$k][$k])) 
@@ -246,23 +246,11 @@ class User extends AppModel {
                                'fields' => array('Atividade.id', 'Atividade.vagas', 'Agenda.horario_ini', 'Agenda.horario_fim', 'Agenda.data')
                            ));
                            
-                           //pr($atividade); 
-
-                           $horarios_ini_escolhidos_participante[] = "{$atividade['Agenda']['data']} {$atividade['Agenda']['horario_ini']}";
-                           $horarios_ini_escolhidos_participante[] = "{$atividade['Agenda']['data']} {$atividade['Agenda']['horario_fim']}";
-
-                           $timestamp_ini = strtotime($horarios_ini_escolhidos_participante[0]);
-                           $timestamp_fim = strtotime($horarios_ini_escolhidos_participante[1]);
-
-                           //Verifica Conflito Horários
-                           if (!$this->verificarConflitoHorario($horariosEscolhidos, $timestamp_ini,$timestamp_ini )){
-                               $this->validationErrors['horario_conflito'][] = 'Você deve escolher oficinas que não conflitem horário.';
-                           }
-
-                           $horariosEscolhidos[] = array($timestamp_ini,$timestamp_fim);
-                           //echo $k;
-                           //pr($horariosEscolhidos);
-                           //Verifica vagas
+                           $horarios_escolhidos[] = array(
+                               "{$atividade['Agenda']['data']} {$atividade['Agenda']['horario_ini']}",
+                               "{$atividade['Agenda']['data']} {$atividade['Agenda']['horario_fim']}"
+                           );
+ 
                            if ($atividade['Atividade']['vagas'] == 0){
                                $this->validationErrors['vagas'][] = 'Você deve escolher atividades com vagas disponíveis.';
 
@@ -270,6 +258,23 @@ class User extends AppModel {
                        }
                     }
                     //pr($horariosEscolhidos);die;
+                }
+                
+                //pr($horarios_escolhidos);
+                foreach ($horarios_escolhidos as $key => $horarios){
+                    $horarios_escolhidos_tmp = $horarios_escolhidos;
+                    unset($horarios_escolhidos_tmp[$key]);
+                    
+                    $from = $horarios[0];
+                    $to = $horarios[1];
+                    foreach ($horarios_escolhidos_tmp as $horarios_tmp){
+                        $from_compare = $horarios_tmp[0];
+                        $to_compare = $horarios_tmp[1];
+                        
+                        if (!$this->intersectCheck($from, $from_compare, $to, $to_compare)){
+                            $this->validationErrors['horario_conflito'][] = 'Você deve escolher atividades que não conflitem horário.';
+                        }
+                    }
                 }
                 
 		return true;
@@ -312,7 +317,8 @@ class User extends AppModel {
 
             if (!empty($horariosEscolhidos)){
                 foreach ($horariosEscolhidos as $horarios){
-                    // pr($timestamp_ini);
+                    pr($horarios);
+                    pr($timestamp_ini);die;
                     if ($timestamp_ini = $horarios[0]){
                         return false;
                     }
@@ -325,16 +331,38 @@ class User extends AppModel {
                     if ($timestamp_fim = $horarios[1]){
                         return false;
                     }
-                    if ($timestamp_ini > $horarios[0] && $timestamp_ini < $horarios[1]  ){
+                    if ($horarios[0] >= $timestamp_ini   && $horarios[1] <= $timestamp_fim){
+                        die;
                         return false;
                     }
-                    if ($timestamp_fim > $horarios[0] && $timestamp_fim < $horarios[1]  ){
-                        return false;
-                    }
+//                    if ($timestamp_fim > $horarios[0] && $timestamp_fim < $horarios[1]  ){
+//                        return false;
+//                    }
                 }
                 
             }
             return true;
+        }
+        
+        function intersectCheck($from, $from_compare, $to, $to_compare){
+            
+//            pr(compact('from', 'from_compare', 'to', 'to_compare'));
+            $from = strtotime($from);
+            $from_compare = strtotime($from_compare);
+            $to = strtotime($to);
+            $to_compare = strtotime($to_compare);
+            $intersect = min($to, $to_compare) - max($from, $from_compare);
+                    if ( $intersect < 0 ) $intersect = 0;
+                    $overlap = $intersect / 3600;
+                    if ( $overlap <= 0 ):
+                            // There are no time conflicts
+                            return TRUE;
+                            else:
+                                
+                            // There is a time conflict
+                            // echo '<p>There is a time conflict where the times overlap by ' , $overlap , ' hours.</p>';
+                            return FALSE;
+                    endif;
         }
 	
 }

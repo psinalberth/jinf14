@@ -22,26 +22,44 @@ class InscricoesController extends AppController{
     public $label = 'Inscrições';
 	
     public $submenu = array( 'index', 'add' );
-    
-    public $ultimaEdicao;
+
     
     function beforeFilter() { 
         $this->Auth->allow('add'); 
-        
-        
-        
-        $this->ultimaEdicao = $this->Edicao->find('first', array(
-            'fields' => array('Edicao.ano'),
-            'order' => 'ano DESC',
-            'contain' => array()
-        ));
-        
-        $this->Security->validatePost = false;
-        $this->Security->csrfCheck = false;
+     
+        //$this->Security->validatePost = false;
+        //$this->Security->csrfCheck = false;
     }
     
     public function index(){
         
+       $this->paginate['contain'] = array('User', 'Agenda');
+       
+       $conditions = array();
+       $conditions = $this->postConditions($this->request->data, array('name' => 'LIKE'));
+       $conditions['Agenda.edicao_id'] = $this->Session->read('ultima_dicao_id');
+       $this->paginate['conditions'] = $conditions;
+       
+       $this->paginate['fields'] = array('DISTINCT User.id', 'User.*');
+
+       
+       $this->set('inscricoes', $this->paginate('Inscricao'));
+       
+    }
+    
+    public function view($id = null){
+        
+        $contain = array(
+            'User',
+            'Agenda' => array(
+                'Atividade' => array(
+                    'fields' => array('id', 'nome_atividade')
+                )
+            )
+        );
+        $inscrito = $this->Inscricao->find('all', array('conditions' => array('User.id' => $id), 'contain' => $contain));
+
+        $this->set('inscrito', $inscrito);
     }
     
     function add(){
@@ -55,7 +73,6 @@ class InscricoesController extends AppController{
                 if( $this->User->validates() ){
                         
                         if( $this->User->save() ){
-                                pr($this->request->data); die;
                                 $this->Session->setFlash( 'Inscrição realizado com sucesso!', "default", array( 'class' => 'success' ) );
                                 $this->redirect( array( 'controller' => $this->name, 'action' => 'add' ) );
 
@@ -71,57 +88,7 @@ class InscricoesController extends AppController{
                         }
                         $this->setMessage( 'validateError' );
         }
-		        
-//        $error = false;
-//        if ($this->data){
-//           
-//           $this->request->data['User']['profile_id'] = 3;
-//           
-//           $dataSource = $this->User->getDataSource();
-//           $dataSource->begin();
-//           $this->User->create( $this->request->data['User']);
-//           if( $this->User->validates() ){
-//               if ($this->User->save()){
-//                   $user_id = $this->User->getInsertID(); 
-//                  //echo $user_id; die;
-//                   if(isset($user_id)){
-//                       foreach ($this->request->data['Inscricao'] as $programacao_id => $Inscricoes){
-//                           if ($Inscricoes == 1){
-//                               $this->request->data['Inscricao']['programacao_id'] = $programacao_id;
-//                               $this->request->data['Inscricao']['user_id'] = $user_id;
-//                               $this->Inscricao->create($this->request->data['Inscricao']);
-//                               
-//                               if( $this->Inscricao->validates() ){
-//                                   if (!$this->Inscricao->save()){
-//                                       $dataSource->rollback();
-//                                       $this->setMessage( 'saveError', 'Inscricao' );
-//                                       $this->redirect(array('action' => 'add'));
-//                                   }
-//                               }else{  
-//                                       $dataSource->rollback();
-//                                       $this->setMessage( 'saveError', 'Inscricao' );
-//                                       $this->redirect(array('action' => 'add'));
-//                               }
-//                           }
-//                       }
-//                   }else{
-//                       $dataSource->rollback();
-//                       $this->setMessage( 'saveError', 'Inscricao' );
-//                       $this->redirect(array('action' => 'add'));                       
-//                   }   
-//               }else{
-//                   $dataSource->rollback();
-//                  $this->setMessage( 'saveError', 'Inscricao' );
-//               }
-//           }else{
-//               $this->setMessage( 'validateError' );
-//           }
-//           
-// 
-//
-//        
-//           
-//        }
+
         
         $fields = array(
             'Agenda.id', 'TipoAtividade.id', 'TipoAtividade.nome',
@@ -138,10 +105,11 @@ class InscricoesController extends AppController{
             )
             
         );
-        
+                
         $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => 2014),
+            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_dicao_ano')),
         ));
+        
         
         $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
         $atividades = array();
@@ -172,6 +140,82 @@ class InscricoesController extends AppController{
         $this->set('options_checkbox_atividades',$options_checkbox_atividades);
         $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
     }
+    
+    public function edit($id){
+        
+        if( $this->request->isPost() ){
+            
+                if( $this->User->validates() ){
+                        $this->User->id = $id;
+                        if( $this->User->save($this->request->data) ){
+                                $this->Session->setFlash( 'Inscrição editada com sucesso!', "default", array( 'class' => 'success' ) );
+                                $this->redirect( array('action' => 'view', $id ) );
+
+                        } else
+                                $this->setMessage( 'saveError', 'Profile' );
+
+                } else
+                        if(!empty($this->User->validationErrors['horario_conflito'])){
+                            $this->set('erro_horario_conflito', $this->User->validationErrors['horario_conflito'][0]);
+                        }
+                        if(!empty($this->User->validationErrors['vagas'])){
+                            $this->set('erro_vagas', $this->User->validationErrors['vagas'][0]);
+                        }
+                        $this->setMessage( 'validateError' );
+        }
+        
+        
+        $this->request->data = $this->User->findById($id);
+
+        $agendas = $this->Agenda->find('all', array(
+            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_dicao_ano')),
+        ));
+       // pr($agendas); die;
+        $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
+        $atividades = array();
+        foreach ($agendas as $agenda){
+           if (array_key_exists($agenda['Atividade']['tipo_atividade_id'], $tipo_atividades)){
+               $agenda['Atividade']['programacao_id'] = $agenda['Agenda']['id'];
+               $agenda['Atividade']['data'] = $agenda['Agenda']['data'];
+               $agenda['Atividade']['horario_ini'] = $agenda['Agenda']['horario_ini'];
+               $agenda['Atividade']['horario_fim'] = $agenda['Agenda']['horario_fim'];
+               $atividades[$tipo_atividades[$agenda['Atividade']['tipo_atividade_id']]][] = $agenda['Atividade'];
+               //$atividades['Agenda'] = $agenda['Agenda'];
+           }
+        }
+        
+        $options_checkbox_atividades = array();
+        foreach ($atividades as $tipo_atividade => $atividade){
+            foreach ($atividade as $ativ){
+                $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
+                $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
+                $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
+                
+                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$ativ['vagas']})";
+                $options_checkbox_atividades[$tipo_atividade][$ativ['programacao_id']] = $txt ;
+            }
+        }
+        
+        $this->set('atividades',$atividades);
+        $this->set('options_checkbox_atividades',$options_checkbox_atividades);
+        $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
+
+    }
+    
+    public function delete($id) {
+        
+        //Código caso eu não queira que esse método seja executado por requisição GET
+//        if ($this->request->is('get')) {
+//            throw new MethodNotAllowedException();
+//        }
+
+        if ($this->User->delete($id)) {
+            $this->Session->setFlash( 'Inscrição excluída com sucesso!', "default", array( 'class' => 'success' ) );
+            return $this->redirect(array('action' => 'index'));
+        }else{
+             $this->setMessage( 'saveError', 'Profile' );
+        }
+    }   
     
     private function checaEdicao($atividades)
     {

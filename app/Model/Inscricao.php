@@ -37,7 +37,7 @@ class Inscricao extends AppModel{
    );  
     
    public function beforeValidate($data){
-      pr($data); die;
+      //pr($data); die;
    }
 }
 

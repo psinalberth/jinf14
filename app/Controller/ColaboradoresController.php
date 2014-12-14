@@ -266,9 +266,8 @@ class ColaboradoresController extends AppController {
 		//pr(compact("Colaborador","agenda","atividade"));
 		//die();
 		$this->set( compact("Colaborador","agenda","atividade") );
-		
 
-		}
+        }
 
 	public function indexlist( $name = null ){
 	
