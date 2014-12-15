@@ -37,7 +37,7 @@ class InscricoesController extends AppController{
        
        $conditions = array();
        $conditions = $this->postConditions($this->request->data, array('name' => 'LIKE'));
-       $conditions['Agenda.edicao_id'] = $this->Session->read('ultima_dicao_id');
+       $conditions['Agenda.edicao_id'] = $this->Session->read('ultima_edicao_id');
        $this->paginate['conditions'] = $conditions;
        
        $this->paginate['fields'] = array('User.*');
@@ -92,7 +92,7 @@ class InscricoesController extends AppController{
 
                 
         $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_dicao_ano')),
+            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
         ));
         
         
@@ -157,7 +157,7 @@ class InscricoesController extends AppController{
 
                 
         $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_dicao_ano')),
+            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
         ));
         
         
@@ -220,7 +220,7 @@ class InscricoesController extends AppController{
         $this->request->data = $this->User->findById($id);
 
         $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_dicao_ano')),
+            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
         ));
        // pr($agendas); die;
         $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));

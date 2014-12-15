@@ -95,8 +95,8 @@ class AppController extends Controller {
                             'order' => 'ano DESC',
                             'contain'=> array()));
                         
-                        $this->Session->write('ultima_dicao_ano', $this->ultimaEdicao['Edicao']['ano']);
-                        $this->Session->write('ultima_dicao_id', $this->ultimaEdicao['Edicao']['id']);         
+                        $this->Session->write('ultima_edicao_ano', $this->ultimaEdicao['Edicao']['ano']);
+                        $this->Session->write('ultima_edicao_id', $this->ultimaEdicao['Edicao']['id']);         
             }
 	}
 	
