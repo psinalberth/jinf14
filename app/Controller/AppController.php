@@ -53,7 +53,7 @@ class AppController extends Controller {
 		'Menu' 
 	);
     
-    public $helpers		= 	array( 'Session', 'Form', 'Html', 'Paginator', 'Time', 'Text', 'FrontEnd', 'BForm' );
+    public $helpers		= 	array( 'Session', 'Form', 'Html', 'Paginator', 'Time', 'Text', 'FrontEnd', 'BForm', 'Fpdf' );
     
     public $paginate	=	array( 'limit' => 20, 'order' => 'created DESC', 'contain' => false );
     

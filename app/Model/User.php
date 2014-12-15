@@ -16,7 +16,7 @@ class User extends AppModel {
 	
 	public $belongsTo 		= 	array( 'Profile' );
         
-        //public $hasMany                 =       array('Curso');
+       
 
         public $hasAndBelongsToMany = array(
             'Agenda' =>
@@ -243,7 +243,10 @@ class User extends AppModel {
                                'conditions' => array(
                                    'Agenda.id' => $programacao_id
                                ),
-                               'fields' => array('Atividade.id', 'Atividade.vagas', 'Agenda.horario_ini', 'Agenda.horario_fim', 'Agenda.data')
+                               'fields' => array('Atividade.id', 'Atividade.vagas', 
+                                   'Agenda.horario_ini', 'Agenda.horario_fim', 
+                                   'Agenda.data', 'Agenda.vagas_restantes'
+                               )
                            ));
                            
                            $horarios_escolhidos[] = array(
@@ -251,7 +254,7 @@ class User extends AppModel {
                                "{$atividade['Agenda']['data']} {$atividade['Agenda']['horario_fim']}"
                            );
  
-                           if ($atividade['Atividade']['vagas'] == 0){
+                           if ($atividade['Agenda']['vagas_restantes'] == 0){
                                $this->validationErrors['vagas'][] = 'Você deve escolher atividades com vagas disponíveis.';
 
                            }
@@ -304,10 +307,19 @@ class User extends AppModel {
 			if( !$this->data[ $this->name ][ 'pass_switched' ] )
 				unset( $this->data[ $this->name ][ 'pass_switched' ] );
                         
-               //Dimnuido vagas atividade
-               if (isset($this->data['Agenda']['Agenda'])){
-                    //pr($this->data);die;
-               }
+//               //Dimnuido vagas atividade
+//               if (isset($this->data['Agenda']['Agenda'])){
+//                   foreach ($this->data['Agenda']['Agenda'] as $agenda_id){
+//                       $this->Agenda->id = $agenda_id;
+//                       
+//                       $this->data['Agenda']['vagas_disponiveis']--;
+//                       
+//                       if ($this->Agenda->save($this->data['Agenda'])){
+//                           return true;
+//                        }
+//                   }
+//                    
+//               }
 		
 		return true;
 	}

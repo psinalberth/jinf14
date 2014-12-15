@@ -103,7 +103,9 @@ class UsersController extends AppController {
 		} else {
 			
 			$this->User->create( $this->request->data );
-			
+                        
+			$this->validator()->remove('username');
+                        
 			if( $this->User->validates() ){
 						
 				if( $this->User->save( null, false ) ){

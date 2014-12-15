@@ -15,4 +15,6 @@ class Curso extends AppModel{
     public $name = 'Curso';
     
     public $useTable = 'cursos';
+    
+    public $hasOne  =   array('Curso');
 }

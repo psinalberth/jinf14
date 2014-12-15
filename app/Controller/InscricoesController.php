@@ -40,7 +40,8 @@ class InscricoesController extends AppController{
        $conditions['Agenda.edicao_id'] = $this->Session->read('ultima_dicao_id');
        $this->paginate['conditions'] = $conditions;
        
-       $this->paginate['fields'] = array('DISTINCT User.id', 'User.*');
+       $this->paginate['fields'] = array('User.*');
+       $this->paginate['group'] = array('Inscricao.user_id');
 
        
        $this->set('inscricoes', $this->paginate('Inscricao'));
@@ -67,7 +68,7 @@ class InscricoesController extends AppController{
         
         if( $this->request->isPost() ){
 
-               $this->request->data['User']['profile_id'] = 3;
+               $this->request->data['User']['profile_id'] = 2;
                 $this->User->create( $this->request->data );
              
                 if( $this->User->validates() ){
@@ -89,22 +90,6 @@ class InscricoesController extends AppController{
                         $this->setMessage( 'validateError' );
         }
 
-        
-        $fields = array(
-            'Agenda.id', 'TipoAtividade.id', 'TipoAtividade.nome',
-            'Atividade.id', 'Atividade.nome_atividade'
-        );
-        
-        $joins = array(
-            array('table' => 'tipo_atividade',
-                'alias' => 'TipoAtividade',
-                'type' => 'INNER',
-                'conditions' => array(
-                    'TipoAtividade.id = Atividade.id',
-                )
-            )
-            
-        );
                 
         $agendas = $this->Agenda->find('all', array(
             'conditions' => array('Edicao.ano' => $this->Session->read('ultima_dicao_ano')),
@@ -119,6 +104,7 @@ class InscricoesController extends AppController{
                $agenda['Atividade']['data'] = $agenda['Agenda']['data'];
                $agenda['Atividade']['horario_ini'] = $agenda['Agenda']['horario_ini'];
                $agenda['Atividade']['horario_fim'] = $agenda['Agenda']['horario_fim'];
+               $agenda['Atividade']['vagas_restantes'] = $agenda['Agenda']['vagas_restantes'];
                $atividades[$tipo_atividades[$agenda['Atividade']['tipo_atividade_id']]][] = $agenda['Atividade'];
                //$atividades['Agenda'] = $agenda['Agenda'];
            }
@@ -130,8 +116,74 @@ class InscricoesController extends AppController{
                 $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
                 $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
                 $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
+                $vagas = $ativ['vagas_restantes'];
                 
-                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$ativ['vagas']})";
+                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$vagas})";
+                $options_checkbox_atividades[$tipo_atividade][$ativ['programacao_id']] = $txt ;
+            }
+        }
+        
+        $this->set('atividades',$atividades);
+        $this->set('options_checkbox_atividades',$options_checkbox_atividades);
+        $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
+    }
+    
+    function addLogado(){
+        $this->layout = 'inscricao';
+        
+        if( $this->request->isPost() ){
+
+               $this->request->data['User']['profile_id'] = 2;
+                $this->User->create( $this->request->data );
+             
+                if( $this->User->validates() ){
+                        
+                        if( $this->User->save() ){
+                                $this->Session->setFlash( 'Inscrição realizado com sucesso!', "default", array( 'class' => 'success' ) );
+                                $this->redirect( array( 'controller' => $this->name, 'action' => 'add' ) );
+
+                        } else
+                                $this->setMessage( 'saveError', 'Profile' );
+
+                } else
+                        if(!empty($this->User->validationErrors['horario_conflito'])){
+                            $this->set('erro_horario_conflito', $this->User->validationErrors['horario_conflito'][0]);
+                        }
+                        if(!empty($this->User->validationErrors['vagas'])){
+                            $this->set('erro_vagas', $this->User->validationErrors['vagas'][0]);
+                        }
+                        $this->setMessage( 'validateError' );
+        }
+
+                
+        $agendas = $this->Agenda->find('all', array(
+            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_dicao_ano')),
+        ));
+        
+        
+        $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
+        $atividades = array();
+        foreach ($agendas as $agenda){
+           if (array_key_exists($agenda['Atividade']['tipo_atividade_id'], $tipo_atividades)){
+               $agenda['Atividade']['programacao_id'] = $agenda['Agenda']['id'];
+               $agenda['Atividade']['data'] = $agenda['Agenda']['data'];
+               $agenda['Atividade']['horario_ini'] = $agenda['Agenda']['horario_ini'];
+               $agenda['Atividade']['horario_fim'] = $agenda['Agenda']['horario_fim'];
+               $agenda['Atividade']['vagas_restantes'] = $agenda['Agenda']['vagas_restantes'];
+               $atividades[$tipo_atividades[$agenda['Atividade']['tipo_atividade_id']]][] = $agenda['Atividade'];
+               //$atividades['Agenda'] = $agenda['Agenda'];
+           }
+        }
+        
+        $options_checkbox_atividades = array();
+        foreach ($atividades as $tipo_atividade => $atividade){
+            foreach ($atividade as $ativ){
+                $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
+                $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
+                $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
+                $vagas = $ativ['vagas_restantes'];
+                
+                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$vagas})";
                 $options_checkbox_atividades[$tipo_atividade][$ativ['programacao_id']] = $txt ;
             }
         }
@@ -179,6 +231,7 @@ class InscricoesController extends AppController{
                $agenda['Atividade']['data'] = $agenda['Agenda']['data'];
                $agenda['Atividade']['horario_ini'] = $agenda['Agenda']['horario_ini'];
                $agenda['Atividade']['horario_fim'] = $agenda['Agenda']['horario_fim'];
+               $agenda['Atividade']['vagas_restantes'] = $agenda['Agenda']['vagas_restantes'];
                $atividades[$tipo_atividades[$agenda['Atividade']['tipo_atividade_id']]][] = $agenda['Atividade'];
                //$atividades['Agenda'] = $agenda['Agenda'];
            }
@@ -190,8 +243,9 @@ class InscricoesController extends AppController{
                 $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
                 $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
                 $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
+                $vagas = $ativ['vagas_restantes'];
                 
-                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$ativ['vagas']})";
+                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$vagas})";
                 $options_checkbox_atividades[$tipo_atividade][$ativ['programacao_id']] = $txt ;
             }
         }
@@ -232,6 +286,16 @@ class InscricoesController extends AppController{
         
         return $atividades;
     }
+    
+    function teste2() { 
+        
+        $this->layout = 'pdf'; 
+        
+        $this->set('data','hello world!'); 
+        
+        
+        //$this->render('pdf');
+    } 
 }
 
 
