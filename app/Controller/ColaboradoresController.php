@@ -273,21 +273,48 @@ class ColaboradoresController extends AppController {
 	
 	//	$this->checkAccess( $this->name, __FUNCTION__ );
 
+
 		$User = $this->User->findByName($name);
 		$Colaborador = $this->Colaborador->find('first', array('conditions' => array('Colaborador.user_id' => $User['User']['id'])));
 		
-		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->ultimaEdicao)));
+		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'])));
 		
 		$atividade = $this->Atividade->find('first',array('conditions' => array('Atividade.id' => $agenda['Agenda']['atividade_id'])));
 		$agenda1 = $agenda['Agenda']['id'];
 
 		$pessoas = $this->Inscricao->query("Select *from inscricao join users where users.id = inscricao.user_id and inscricao.programacao_id = '{$agenda1}'");
         
+
 		//pr($pessoas);
 		//die();
 
 		$this->set("pessoas",$pessoas);
 	}
+
+
+		public function validapresenca( $id = null){
+		
+	//	$this->checkAccess( $this->name, __FUNCTION__ );
+		
+		$this->Inscricao->contain();
+		$Inscricao = $this->Inscricao->findById( $id );
+		
+
+		if( $Inscricao['Inscricao']['presenca'] )
+			{$Inscricao['Inscricao']['presenca'] = 0;
+			$valor = 0;}
+		else{
+			$Inscricao['Inscricao']['presenca'] = 1;
+			$valor = 1;
+		}
+
+		$this->Inscricao->id = $this->Inscricao->field('id', array('id' => $id));
+		if ($this->Inscricao->id) {
+    		$this->Inscricao->saveField('presenca', $valor);
+		}
+		$this->redirect( array( 'controller' => "Colaboradores", 'action' => "indexlist/Administrador" ) );
+	}
+	
 	/*----------------------------------------
 	 * Methods
 	 ----------------------------------------*/
