@@ -4,61 +4,30 @@ App::import('Vendor', 'fpdf/fpdf');
 App::uses('AppHelper', 'View/Helper');
 
 class FpdfHelper extends AppHelper {
-    
-    public $FPDF;
-    
-    public function __construct(){
-        $this->FPDF = new FPDF();
-        //$this->FPDF->AddPage();
 
+    public $Fpdf;
+    public function __construct(){
+       
+        $this->Fpdf = new FPDF();
+        $this->Fpdf->AddPage('L','A4');
+        
+        $logo = file_get_contents( APP  . 'webroot/img/certificado.jpg');
+        $this->Fpdf->image(APP  . 'webroot/img/certificado.jpg', 0, 0, 297, 210);
     }
     
     public function header(){
-   
-        $this->FPDF->SetFont('Arial','B',40);
-        // Page number
-        $this->FPDF->Cell(0,10,'Pag',0,0,'C');     
+        $this->Fpdf->SetFont('Arial','B',50);
+        $this->Fpdf->Ln(30);
+        $this->Fpdf->Cell(0, 0,'Certificado JINF\'14',0,0,'C');        
     }
-
-    function LoadData()
-    {
-        // Read file lines
-
-        $data = array();
-        $lines = array('teste', 'teste2');
-        foreach($lines as $line)
-            $data[] = $line;
-        return $data;
-    }  
     
-    function BasicTable($header, $data)
-    {
-        // Header
-        foreach($header as $col)
-            $this->FPDF->Cell(40,7,$col,1);
-        $this->FPDF->Ln();
-        // Data
-
-            foreach($data as $col)
-                $this->FPDF->Cell(40,6,$col,1);
-            $this->FPDF->Ln();
-        
-    }
     public function Output(){
         
-//        $this->FPDF->AliasNbPages();
-//        $this->FPDF->AddPage();
-//        $this->FPDF->SetFont('Times','',12);
-//        for($i=1;$i<=40;$i++)
-//            $this->FPDF->Cell(0,10,'Printing line number '.$i,0,1);
-//        
-//        $this->FPDF->Output('teste.pdf', 'D');
-        $header = array('Country', 'Capital');
-        $data = $this->LoadData();
-        //pr($data);die;
-        $this->FPDF->AddPage();
-        $this->BasicTable($header,$data);  
-        $this->FPDF->Output('teste2.pdf', 'D');
+        $txt = 'Certifica-se que Márcio Venann Participou da quarta edição da Jornada De Informática do Instuto Federal do Maranhão. Com programação de 16 horas';
+        $this->Fpdf->Ln(25);
+        $this->Fpdf->SetFont('Arial','B',10);
+        $this->Fpdf->MultiCell(200,5,$txt, 0, 'C');
+        $this->Fpdf->Output('teste2.pdf', 'D');
         
         
     }
