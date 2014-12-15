@@ -34,21 +34,21 @@ CREATE TABLE IF NOT EXISTS `areas` (
 -- Dumping data for table jinf14.areas: ~35 rows (approximately)
 /*!40000 ALTER TABLE `areas` DISABLE KEYS */;
 REPLACE INTO `areas` (`id`, `parent_id`, `appear`, `controller`, `controller_label`, `action`, `action_label`) VALUES
-	(1, NULL, 1, 'Users', 'Usuários', 'index', 'Todos'),
-	(2, NULL, 0, 'Users', 'Usuários', 'add', 'Criar Novo'),
-	(3, NULL, 0, 'Users', 'Usuários', 'edit', 'Editar'),
-	(4, NULL, 0, 'Users', 'Usuários', 'delete', 'Excluir'),
-	(5, 1, 1, 'Profiles', 'Perfis de Usuário', 'index', 'Todos'),
-	(6, NULL, 0, 'Profiles', 'Perfis de Usuário', 'add', 'Criar Novo'),
-	(7, NULL, 0, 'Profiles', 'Perfis de Usuário', 'edit', 'Editar'),
-	(8, NULL, 0, 'Profiles', 'Perfis de Usuário', 'delete', 'Excluir'),
-	(9, NULL, 0, 'Profiles', 'Perfis de Usuário', 'view', 'Visualizar'),
-	(10, NULL, 0, 'Users', 'Usuários', 'view', 'Visualizar'),
-	(14, 1, 1, 'Areas', 'Áreas', 'index', 'Lista'),
-	(15, NULL, 0, 'Areas', 'Áreas', 'add', 'Adicionar'),
-	(16, NULL, 0, 'Areas', 'Áreas', 'edit', 'Editar'),
-	(17, NULL, 0, 'Areas', 'Áreas', 'delete', 'Deletar'),
-	(18, NULL, 0, 'Areas', 'Áreas', 'view', 'Visualizar'),
+	(1, NULL, 1, 'Users', 'Usu&aacute;rios', 'index', 'Todos'),
+	(2, NULL, 0, 'Users', 'Usu&aacute;rios', 'add', 'Criar Novo'),
+	(3, NULL, 0, 'Users', 'Usu&aacute;rios', 'edit', 'Editar'),
+	(4, NULL, 0, 'Users', 'Usu&aacute;rios', 'delete', 'Excluir'),
+	(5, 1, 1, 'Profiles', 'Perf&iacute;s de Usu&aacute;rio', 'index', 'Todos'),
+	(6, NULL, 0, 'Profiles', 'Perf&iacute;s de Usu&aacute;rio', 'add', 'Criar Novo'),
+	(7, NULL, 0, 'Profiles', 'Perf&iacute;s de Usu&aacute;rio', 'edit', 'Editar'),
+	(8, NULL, 0, 'Profiles', 'Perf&iacute;s de Usu&aacute;rio', 'delete', 'Excluir'),
+	(9, NULL, 0, 'Profiles', 'Perf&iacute;s de Usu&aacute;rio', 'view', 'Visualizar'),
+	(10, NULL, 0, 'Users', 'Usu&aacute;rios', 'view', 'Visualizar'),
+	(14, 1, 1, 'Areas', 'Ãreas', 'index', 'Lista'),
+	(15, NULL, 0, 'Areas', 'Ãreas', 'add', 'Adicionar'),
+	(16, NULL, 0, 'Areas', 'Ãreas', 'edit', 'Editar'),
+	(17, NULL, 0, 'Areas', 'Ãreas', 'delete', 'Deletar'),
+	(18, NULL, 0, 'Areas', 'Ãreas', 'view', 'Visualizar'),
 	(19, NULL, 1, 'Edicoes', 'Edições', 'index', 'Listar'),
 	(20, NULL, 0, 'Edicoes', 'Edições', 'add', 'Adicionar'),
 	(21, NULL, 0, 'Edicoes', 'Edições', 'edit', 'Editar'),
@@ -242,13 +242,17 @@ CREATE TABLE IF NOT EXISTS `inscricao` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `programacao_id` int(11) NOT NULL,
+  `presenca` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_inscricao_users1` (`user_id`),
   KEY `fk_inscricao_programacao1` (`programacao_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Dumping data for table jinf14.inscricao: ~0 rows (approximately)
+-- Dumping data for table jinf14.inscricao: ~2 rows (approximately)
 /*!40000 ALTER TABLE `inscricao` DISABLE KEYS */;
+REPLACE INTO `inscricao` (`id`, `user_id`, `programacao_id`, `presenca`) VALUES
+	(1, 1, 1, 1),
+	(2, 2, 1, 0);
 /*!40000 ALTER TABLE `inscricao` ENABLE KEYS */;
 
 
@@ -359,7 +363,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table jinf14.users: ~2 rows (approximately)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 REPLACE INTO `users` (`id`, `password`, `name`, `email`, `last_login`, `pass_switched`, `created`, `modified`, `telefone`, `curso_id`, `profile_id`) VALUES
-	(1, 'a78f76a37a7f699f39b324ba58b2aad5', 'Administrador', 'admin', '2014-12-10 16:46:15', 1, '2014-12-06 00:00:00', '2014-12-10 16:46:15', '12121212', 1, 1),
+	(1, 'a78f76a37a7f699f39b324ba58b2aad5', 'Administrador', 'admin', '2014-12-15 20:09:24', 1, '2014-12-06 00:00:00', '2014-12-15 20:09:24', '12121212', 1, 1),
 	(2, '123456', 'paciente zero', 'paciente@domain', '2014-12-08 00:00:00', 1, '2014-12-08 00:00:00', '2014-12-08 00:00:00', '1212112122', 2, 1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
