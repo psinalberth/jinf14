@@ -82,7 +82,7 @@ class ColaboradoresController extends AppController {
 		$Colaborador = $this->Colaborador->findById($id);
 		//pr($this->ultimaEdicao);
 		//die();	
-		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->ultimaEdicao)));
+		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'],'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
 		
 		$atividade = $this->Atividade->find('first',array('conditions' => array('Atividade.id' => $agenda['Agenda']['atividade_id'])));
 		
@@ -137,7 +137,7 @@ class ColaboradoresController extends AppController {
         );
         
         $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => $this->ultimaEdicao),
+            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
         ));
         
         $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
@@ -168,7 +168,6 @@ class ColaboradoresController extends AppController {
 		
 	//	$this->checkAccess( $this->name, __FUNCTION__ );
 		$this->Colaborador->id = $id;
-
 		if( $this->request->isGet() ){
 
 			$this->Colaborador->contain();
@@ -208,9 +207,9 @@ class ColaboradoresController extends AppController {
         );
         
         $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => $this->ultimaEdicao),
+            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
         ));
-        
+      
         $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
         $atividades = array();
         foreach ($agendas as $agenda){
@@ -258,7 +257,7 @@ class ColaboradoresController extends AppController {
 		$User = $this->User->findByName($name);
 		$Colaborador = $this->Colaborador->find('first', array('conditions' => array('Colaborador.user_id' => $User['User']['id'])));
 		
-		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->ultimaEdicao)));
+		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
 		
 		$atividade = $this->Atividade->find('first',array('conditions' => array('Atividade.id' => $agenda['Agenda']['atividade_id'])));
 		
@@ -269,15 +268,14 @@ class ColaboradoresController extends AppController {
 
         }
 
-	public function indexlist( $name = null ){
+	public function indexlist(){
 	
 	//	$this->checkAccess( $this->name, __FUNCTION__ );
 
-
-		$User = $this->User->findByName($name);
+		$User = $this->User->findById($this->Auth->user("id"));
 		$Colaborador = $this->Colaborador->find('first', array('conditions' => array('Colaborador.user_id' => $User['User']['id'])));
 		
-		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'])));
+		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
 		
 		$atividade = $this->Atividade->find('first',array('conditions' => array('Atividade.id' => $agenda['Agenda']['atividade_id'])));
 		$agenda1 = $agenda['Agenda']['id'];
@@ -312,7 +310,7 @@ class ColaboradoresController extends AppController {
 		if ($this->Inscricao->id) {
     		$this->Inscricao->saveField('presenca', $valor);
 		}
-		$this->redirect( array( 'controller' => "Colaboradores", 'action' => "indexlist/Administrador" ) );
+		$this->redirect( array( 'controller' => "Colaboradores", 'action' => "indexlist" ) );
 	}
 	
 	/*----------------------------------------
