@@ -50,10 +50,11 @@ class AppController extends Controller {
 	            'Form' => array(
 					'fields' => array( 'username' => 'email', 'password' => 'password' ) ) ) ),
 		'Session', 
-		'Menu' 
+		'Menu',
+                'Upload2'
 	);
     
-    public $helpers		= 	array( 'Session', 'Form', 'Html', 'Paginator', 'Time', 'Text', 'FrontEnd', 'BForm', 'Fpdf' );
+    public $helpers		= 	array( 'Session', 'Form', 'Html', 'Paginator', 'Time', 'Text', 'FrontEnd', 'BForm');
     
     public $paginate	=	array( 'limit' => 20, 'order' => 'created DESC', 'contain' => false );
     
