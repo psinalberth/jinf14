@@ -38,7 +38,7 @@ class ColaboradoresController extends AppController {
 		//$this->paginate[ 'order' ] = "Colaborador.created DESC";
 		
 		$this->paginate[ 'joins' ] = array(
-		    	array('table' => 'Users',
+		    	array('table' => 'users',
 			        'alias' => 'Users',
 			        'type' => 'INNER',
 			        'conditions' => array(
@@ -52,7 +52,7 @@ class ColaboradoresController extends AppController {
 			            'agenda.id = Colaborador.programacao_id', 
 			            			        )
 			    ),
-			    array('table' => 'Atividade',
+			    array('table' => 'atividade',
 			        'alias' => 'Atividade',
 			        'type' => 'INNER',
 			        'conditions' => array(
@@ -82,7 +82,7 @@ class ColaboradoresController extends AppController {
 		$Colaborador = $this->Colaborador->findById($id);
 		//pr($this->ultimaEdicao);
 		//die();	
-		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'],'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
+		$agenda = $this->Agenda->find('first', array('conditions' => array('Agenda.id' => $Colaborador['Colaborador']['programacao_id'],'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
 		
 		$atividade = $this->Atividade->find('first',array('conditions' => array('Atividade.id' => $agenda['Agenda']['atividade_id'])));
 		
@@ -275,7 +275,7 @@ class ColaboradoresController extends AppController {
 		$User = $this->User->findById($this->Auth->user("id"));
 		$Colaborador = $this->Colaborador->find('first', array('conditions' => array('Colaborador.user_id' => $User['User']['id'])));
 		
-		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
+		$agenda = $this->Agenda->find('first', array('conditions' => array('Agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
 		
 		$atividade = $this->Atividade->find('first',array('conditions' => array('Atividade.id' => $agenda['Agenda']['atividade_id'])));
 		$agenda1 = $agenda['Agenda']['id'];

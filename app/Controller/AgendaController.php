@@ -53,7 +53,7 @@ class AgendaController extends AppController{
 
 			        )
 			    ),
-			    array('table' => 'Atividade',
+			    array('table' => 'atividade',
 			        'alias' => 'Atividade',
 			        'type' => 'INNER',
 			        'conditions' => array(
@@ -83,7 +83,7 @@ class AgendaController extends AppController{
 			);
 			$this->paginate[ 'order' ] = array('Agenda.horario_ini');
 			$this->paginate[ 'joins' ] = array(
-			    array('table' => 'Atividade',
+			    array('table' => 'atividade',
 			        'alias' => 'Atividade',
 			        'type' => 'INNER',
 			        'conditions' => array(
@@ -101,7 +101,7 @@ class AgendaController extends AppController{
 			        'alias' => 'Sala',
 			        'type' => 'INNER',
 			        'conditions' => array(
-			            'Sala.id = sala.id',
+			            'Sala.id = Sala.id',
 			        )
 			    ),
 			    array('table' => 'edicao',

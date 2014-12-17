@@ -89,6 +89,6 @@ class CertificadoPdfHelper extends AppHelper {
     }
     
     public function Output(){
-        $this->Fpdf->Output('teste2.pdf', 'D');
+        $this->Fpdf->Output('certificado.pdf', 'D');
     }
 }

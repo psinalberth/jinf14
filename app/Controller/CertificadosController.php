@@ -15,7 +15,11 @@ class CertificadosController extends AppController{
    
     public $name = 'Certificados';
     
-    public $submenu = array( 'index');
+    public $setMenu = "Certificados";
+     
+    public $submenu = array('index');
+    
+    public $label = 'Certificados';
     
     public $uses = array('ConfigCertificado', 'Edicao', 'Agenda', 'Inscricao');
     

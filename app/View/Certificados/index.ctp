@@ -16,7 +16,8 @@
 		<th class="pic"></th>
 		<th><?php echo $this->Paginator->sort( "User.name", "Nome" ) ?></th>
 		<th><?php echo $this->Paginator->sort( "User.email", "E-mail" ) ?></th>
-		<th><?php echo 'Ação'?></th>
+		<th><?php echo $this->Paginator->sort( "User.telefone", "Telefone" ) ?></th>
+		<th></th>
 
 	</tr>
 	</thead>

@@ -6,4 +6,5 @@
  */
 //header('Content-type: application/pdf');
 $this->Fpdf->header();
+$this->Fpdf->body();
 $this->Fpdf->Output();
