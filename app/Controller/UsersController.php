@@ -94,13 +94,13 @@ class UsersController extends AppController {
             $this->data = $this->User->findById($id);
         } else {
 
-            $this->User->create($this->request->data);
+            //$this->User->create($this->request->data);
 
-            $this->validator()->remove('username');
+            //$this->validator()->remove('username');
 
             if ($this->User->validates()) {
 
-                if ($this->User->save(null, false)) {
+                if ($this->User->save(($this->request->data), false)) {
 
                     $this->setMessage('saveSuccess', 'User');
                     $this->redirect(array('controller' => $this->name, 'action' => 'view', $id));
@@ -177,12 +177,12 @@ class UsersController extends AppController {
                     ));
         } else {
 
-            $this->User->create($this->request->data);
+            //$this->User->create($this->request->data);
             $this->User->id = $this->Auth->user('id');
 
             if ($this->User->validates(array('pass_switched' => $this->Auth->user('pass_switched')))) {
 
-                if ($this->User->save(null, false)) {
+                if ($this->User->save($this->request->data, false)) {
 
                     $this->Session->setFlash("Seus dados foram atualizados com <strong>sucesso</strong>.", "default", array('class' => 'success'));
                     $this->Session->write("Auth.User.name", $this->data["User"]["name"]);

@@ -36,13 +36,13 @@ class InscricoesController extends AppController{
        $this->paginate['contain'] = array('User', 'Agenda');
        
        $conditions = array();
-       $conditions = $this->postConditions($this->request->data, array('name' => 'LIKE'));
+       $conditions = $this->postConditions($this->request->data, array('name' => 'LIKE', 'email' => 'LIKE'));
        $conditions['Agenda.edicao_id'] = $this->Session->read('ultima_edicao_id');
        $this->paginate['conditions'] = $conditions;
        
        $this->paginate['fields'] = array('User.*');
        $this->paginate['group'] = array('Inscricao.user_id');
-
+       
        
        $this->set('inscricoes', $this->paginate('Inscricao'));
        

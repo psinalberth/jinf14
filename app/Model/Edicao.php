@@ -10,7 +10,7 @@ class Edicao extends AppModel {
 
 	public $useTable 		= 	'edicao';
 
-	public $label			=	'Usuário';
+	public $label			=	'Edição';
 
   	public $primaryKey        = 'id';
 	

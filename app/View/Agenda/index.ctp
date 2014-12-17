@@ -1,12 +1,10 @@
-<div class="form-actions">
 <?php
-	print $this->Form->create( 'Agenda', array( 'class' => 'form-horizontal' ) );
-	print $this->BForm->input( 'Agenda.ano', array( 'label' => 'Edicao', 'placeholder' => 'Digite o ano da edicão' ) );
+	print $this->Form->create( 'Agenda', array('type' => 'post') );
+	print $this->Form->input( 'Agenda.ano', array('label' => 'Digite a edição que deseja buscar:') );
 	
- 	print $this->Form->button( '<i class="icon-search icon-white"></i>Buscar', array( 'class' => 'btn btn-primary pull-left submit', 'div' => false, 'escape' => false ) );
-        print $this->Form->end() 
+ 	//print $this->Form->button( '<i class="icon-search icon-white"></i>Buscar', array( 'class' => 'btn btn-primary pull-left submit', 'div' => false, 'escape' => false ) );
+        print $this->Form->end('Buscar') 
 ?>
-</div>
 
 <?php if (!empty($programacao)):?>
 <?php 
@@ -19,7 +17,7 @@
     }
 
 ?>
-
+<div class="form-actions">
 <?php $abas = array();?>
 <div class="tabbable"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs">
@@ -67,4 +65,5 @@
   </div>
 </div>
 <?php endif?>
+</div>
 
