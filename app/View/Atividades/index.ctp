@@ -13,6 +13,8 @@
 		<th><?php echo $this->Paginator->sort( "TipoAtividade.nome", "Tipo Atividade" ) ?></th>
 		<th><?php echo $this->Paginator->sort( "Atividade.duracao", "Duracao" ) ?></th>
 		<th><?php echo $this->Paginator->sort( "Atividade.vagas", "Vagas" ) ?></th>
+		<th> Validar Presença</th>
+
 
 	</tr>
 	</thead>
@@ -25,7 +27,8 @@
 		<td><?php echo $atividade[ 'TipoAtividade' ][ 'nome' ] ?></td>
 		<td><?php echo $atividade[ 'Atividade' ][ 'duracao' ] ?></td>
 		<td><?php echo $atividade[ 'Atividade' ][ 'vagas' ] ?></td>
-		<td><?php echo ''?></td>
+		
+		<td><?php echo $this->Html->link( 'Validar Presença', "/Atividades/listapresenca/{$atividade['Atividade']['id']}", array( 'class' => 'btn btn-mini' ) ) ?></div></td>
 
 	</tr>
 		

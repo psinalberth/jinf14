@@ -14,7 +14,7 @@ class AtividadesController extends AppController{
 	
 	public $submenu	= array( 'index', 'add');
 
-	public $uses = array('Atividade', 'TipoAtividade', 'Agenda', 'Profile');
+	public $uses = array('Atividade', 'TipoAtividade', 'Agenda', 'Profile', 'Inscricao');
 
 	
 	/*----------------------------------------
@@ -118,7 +118,47 @@ class AtividadesController extends AppController{
 		$this->redirect( array( 'controller' => $this->name, 'action' => 'index' ) );		
 	}
 
+	public function listapresenca($id = null){
 	
+	//	$this->checkAccess( $this->name, __FUNCTION__ );
+
+		$agenda = $this->Agenda->find('first', array('conditions' => array('agenda.Atividade_id' => $id, 'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
+	
+		$agenda1 = $agenda['Agenda']['id'];
+
+		$pessoas = $this->Inscricao->query("Select *from inscricao join users where users.id = inscricao.user_id and inscricao.programacao_id = '{$agenda1}'");
+
+
+		//pr($pessoas);
+		//die();
+
+		$this->set("pessoas",$pessoas);
+	}
+	
+		public function validapresenca( $id = null){
+		
+	//	$this->checkAccess( $this->name, __FUNCTION__ );
+		
+		$this->Inscricao->contain();
+		$Inscricao = $this->Inscricao->findById( $id );
+		
+
+		if( $Inscricao['Inscricao']['presenca'] )
+			{$Inscricao['Inscricao']['presenca'] = 0;
+			$valor = 0;}
+		else{
+			$Inscricao['Inscricao']['presenca'] = 1;
+			$valor = 1;
+		}
+
+		$this->Inscricao->id = $this->Inscricao->field('id', array('id' => $id));
+		if ($this->Inscricao->id) {
+    		$this->Inscricao->saveField('presenca', $valor);
+		}
+		$this->redirect( array( 'controller' => "Colaboradores", 'action' => "indexlist" ) );
+	}
+
+
 }
 
 ?>
