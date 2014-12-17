@@ -10,7 +10,7 @@ class Agenda extends AppModel {
 
 	public $useTable =    'programacao';
 
-	public $label = 'Agenda';
+	public $label = 'Programação';
   
 
 	/*----------------------------------------

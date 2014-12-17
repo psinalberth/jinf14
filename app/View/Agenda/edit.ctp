@@ -1,18 +1,37 @@
-<?php echo $this->Form->create( 'Atividades', array( 'class' => 'form-horizontal' ) ); ?>
+ <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+ <script>
+  $(function() {
+    $( "#asds" ).datepicker();
+    $( "#sds" ).datepicker();
+  });
+  </script>
+     <script type="text/javascript">
+        $(document).ready(function(){
+            // find the input fields and apply the time select to them.
+            $('#AgendaHorarioIni').ptTimeSelect();
+            $('#AgendaHorarioFim').ptTimeSelect();
+        });
+    </script>
+<?php echo $this->Html->css('jquery.ptTimeSelect.css');?>
+<?php echo $this->Html->script('jquery.ptTimeSelect.js');?>
+<?php echo $this->Form->create( 'Agenda', array( 'class' => 'form-horizontal' ) ); ?>
 
 <div class="row">
 	<div class="span6">
 
 	<?php
-		print $this->BForm->input( 'Atividade.nome_atividade', array( 'label' => 'Nome da Atividade', 'placeholder' => 'Nome da Atividade' ) );
-		print $this->BForm->input( 'Atividade.descricao', array( 'label' => 'Descrição',  'placeholder' => "data descrição", 'type' => 'text') );
-		print $this->BForm->input( 'Atividade.TipoAtividade_id', array( 'label' => 'Tipo de Atividade', 'empty' => '-- Selecione --' , 'options'=> $tipo_atividades) );
-		print $this->BForm->input( 'Atividade.duracao', array( 'label' => 'Duração',  'placeholder' => "data descrição", 'type' => 'text') );	
-		print $this->BForm->input( 'Atividade.vagas', array( 'label' => 'Total  vagas',  'placeholder' => "data descrição", 'type' => 'text') );	
+		print $this->Form->hidden( 'Agenda.id');
+		print $this->BForm->input( 'Agenda.horario_ini', array( 'label' => 'Horário Inicio', 'type' => 'text') );
+		print $this->BForm->input( 'Agenda.horario_fim', array( 'label' => 'Horário Fim', 'type' => 'text'  ) );
+		print $this->BForm->input( 'Agenda.atividade_id', array( 'label' => 'Atividade', 'empty' => '-- Selecione --' , 'options'=> $atividades) );
+		print $this->BForm->input( 'Agenda.sala_id', array( 'label' => 'Sala', 'empty' => '-- Selecione --' , 'options'=> $salas) );
+		print $this->BForm->input( 'Agenda.edicao_id', array( 'label' => 'Edição', 'empty' => '-- Selecione --' , 'options'=> $edicoes) );		
+		print $this->BForm->input( 'Agenda.total_vagas', array( 'label' => 'Total Vagas', 'type' => 'text') );		
 		?>
 
 	</div>
 
 </div>
 
-<?php echo $this->element( "submit", array( 'cancel' => '/atividades' ) ) ?>
+<?php echo $this->element( "submit", array( 'cancel' => '/agenda' ) ) ?>

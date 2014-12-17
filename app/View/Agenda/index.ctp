@@ -7,6 +7,7 @@
 ?>
 
 <?php if (!empty($programacao)):?>
+<?php //pr($programacao) ?>
 <?php 
     $i = 0;
     $data_ini = $programacao[0]['Edicao']['data_ini'];
@@ -39,6 +40,7 @@
 		      <th>Tipo Atividade</th>
                       <th>Sala</th>
 		      <th>Vagas Restante</th>			  
+		      <th>Ações</th>			  
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -51,6 +53,8 @@
                                       <td><?php echo $prog['TipoAtividade']['nome'] ?></td>
                                       <td><?php echo $prog['Sala']['descricao'] ?></td>
 		                      <td><?php echo $prog['Agenda']['vagas_restantes'] ?></td>
+		                      <td><?php echo $this->Html->link( '<i class="icon-trash icon-white"></i> Excluir', "/Agenda/delete/{$prog['Agenda']['id']}", array( 'class' => 'btn btn-mini btn-danger delete', 'escape' => false ) ); ?></td>
+		                      <td><?php echo $this->Html->link( '<i class="icon-edit"></i> Editar', "/Agenda/edit/{$prog['Agenda']['id']}", array( 'class' => 'btn btn-mini', 'escape' => false )); ?></td>
 	              <?php } ?> 			
 			    </tr>
 		    <?php endif?>
