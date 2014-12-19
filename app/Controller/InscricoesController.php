@@ -17,11 +17,14 @@ class InscricoesController extends AppController{
     
     public $uses = array('Atividade', 'Agenda', 'TipoAtividade', 'Edicao', 'Curso', 'User', 'Inscricao');
     
+    public $helpers = array('Fpdf');
+
+
     public $setMenu = "Inscricoes";
     
     public $label = 'Inscrições';
 	
-    public $submenu = array( 'index', 'add' );
+    public $submenu = array( 'index', 'add', 'imprimirListaPresenca' );
 
     
     function beforeFilter() { 
@@ -51,7 +54,6 @@ class InscricoesController extends AppController{
        
        $this->paginate['fields'] = array('User.*');
        $this->paginate['group'] = array('Inscricao.user_id');
-       
        
        $this->set('inscricoes', $this->paginate('Inscricao'));
        $this->set('options', $this->Edicao->find('list', array('fields' => array('ano'))));
@@ -98,42 +100,8 @@ class InscricoesController extends AppController{
                         }
                         $this->setMessage( 'validateError' );
         }
-
-                
-        $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
-        ));
         
-        
-        $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
-        $atividades = array();
-        foreach ($agendas as $agenda){
-           if (array_key_exists($agenda['Atividade']['tipo_atividade_id'], $tipo_atividades)){
-               $agenda['Atividade']['programacao_id'] = $agenda['Agenda']['id'];
-               $agenda['Atividade']['data'] = $agenda['Agenda']['data'];
-               $agenda['Atividade']['horario_ini'] = $agenda['Agenda']['horario_ini'];
-               $agenda['Atividade']['horario_fim'] = $agenda['Agenda']['horario_fim'];
-               $agenda['Atividade']['vagas_restantes'] = $agenda['Agenda']['vagas_restantes'];
-               $atividades[$tipo_atividades[$agenda['Atividade']['tipo_atividade_id']]][] = $agenda['Atividade'];
-               //$atividades['Agenda'] = $agenda['Agenda'];
-           }
-        }
-        
-        $options_checkbox_atividades = array();
-        foreach ($atividades as $tipo_atividade => $atividade){
-            foreach ($atividade as $ativ){
-                $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
-                $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
-                $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
-                $vagas = $ativ['vagas_restantes'];
-                
-                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$vagas})";
-                $options_checkbox_atividades[$tipo_atividade][$ativ['programacao_id']] = $txt ;
-            }
-        }
-        
-        $this->set('atividades',$atividades);
-        $this->set('options_checkbox_atividades',$options_checkbox_atividades);
+        $this->set('options_checkbox_atividades', $this->getOptionsAtividadePorEdicao($this->Session->read('ultima_edicao_id')));
         $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
     }
     
@@ -164,41 +132,7 @@ class InscricoesController extends AppController{
                         $this->setMessage( 'validateError' );
         }
 
-                
-        $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
-        ));
-        
-        
-        $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
-        $atividades = array();
-        foreach ($agendas as $agenda){
-           if (array_key_exists($agenda['Atividade']['tipo_atividade_id'], $tipo_atividades)){
-               $agenda['Atividade']['programacao_id'] = $agenda['Agenda']['id'];
-               $agenda['Atividade']['data'] = $agenda['Agenda']['data'];
-               $agenda['Atividade']['horario_ini'] = $agenda['Agenda']['horario_ini'];
-               $agenda['Atividade']['horario_fim'] = $agenda['Agenda']['horario_fim'];
-               $agenda['Atividade']['vagas_restantes'] = $agenda['Agenda']['vagas_restantes'];
-               $atividades[$tipo_atividades[$agenda['Atividade']['tipo_atividade_id']]][] = $agenda['Atividade'];
-               //$atividades['Agenda'] = $agenda['Agenda'];
-           }
-        }
-        
-        $options_checkbox_atividades = array();
-        foreach ($atividades as $tipo_atividade => $atividade){
-            foreach ($atividade as $ativ){
-                $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
-                $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
-                $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
-                $vagas = $ativ['vagas_restantes'];
-                
-                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$vagas})";
-                $options_checkbox_atividades[$tipo_atividade][$ativ['programacao_id']] = $txt ;
-            }
-        }
-        
-        $this->set('atividades',$atividades);
-        $this->set('options_checkbox_atividades',$options_checkbox_atividades);
+        $this->set('options_checkbox_atividades',$this->getOptionsAtividadePorEdicao($this->Session->read('ultima_edicao_id')));
         $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
     }
     
@@ -224,43 +158,8 @@ class InscricoesController extends AppController{
                         }
                         $this->setMessage( 'validateError' );
         }
-        
-        
-        $this->request->data = $this->User->findById($id);
-
-        $agendas = $this->Agenda->find('all', array(
-            'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
-        ));
-       // pr($agendas); die;
-        $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
-        $atividades = array();
-        foreach ($agendas as $agenda){
-           if (array_key_exists($agenda['Atividade']['tipo_atividade_id'], $tipo_atividades)){
-               $agenda['Atividade']['programacao_id'] = $agenda['Agenda']['id'];
-               $agenda['Atividade']['data'] = $agenda['Agenda']['data'];
-               $agenda['Atividade']['horario_ini'] = $agenda['Agenda']['horario_ini'];
-               $agenda['Atividade']['horario_fim'] = $agenda['Agenda']['horario_fim'];
-               $agenda['Atividade']['vagas_restantes'] = $agenda['Agenda']['vagas_restantes'];
-               $atividades[$tipo_atividades[$agenda['Atividade']['tipo_atividade_id']]][] = $agenda['Atividade'];
-               //$atividades['Agenda'] = $agenda['Agenda'];
-           }
-        }
-        
-        $options_checkbox_atividades = array();
-        foreach ($atividades as $tipo_atividade => $atividade){
-            foreach ($atividade as $ativ){
-                $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
-                $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
-                $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
-                $vagas = $ativ['vagas_restantes'];
-                
-                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$vagas})";
-                $options_checkbox_atividades[$tipo_atividade][$ativ['programacao_id']] = $txt ;
-            }
-        }
-        
-        $this->set('atividades',$atividades);
-        $this->set('options_checkbox_atividades',$options_checkbox_atividades);
+ 
+        $this->set('options_checkbox_atividades',  $this->getOptionsAtividadePorEdicao($this->Session->read('ultima_edicao_id')));
         $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
 
     }
@@ -296,15 +195,79 @@ class InscricoesController extends AppController{
         return $atividades;
     }
     
-    function teste2() { 
+    function listaPresenca() { 
         
-        $this->layout = 'pdf'; 
-        
-        $this->set('data','hello world!'); 
-        
-        
-        //$this->render('pdf');
+        $this->set('options', $this->getOptionsAtividadePorEdicao($this->Session->read('ultima_edicao_id')));
+        // $this->set('options', $this->Edicao->find('list', array('fields' => array('ano'))));
+        //pr($this->TipoAtividade->find('all'));
     } 
+    
+    function imprimirListaPresenca(){
+        $this->layout = 'pdf';
+        
+        if (!empty($this->request->data['Agenda']['id'])){
+            
+            
+            
+            $contain = array(
+                'Atividade'
+            );
+
+            $programacao_atividade = $this->Inscricao->find('all', array(
+                //'contain' => $contain, 
+                'conditions' => array(
+                    'Agenda.id' => $this->request->data['Agenda']['id'] 
+                 )
+            ));
+            //pr($programacao_atividade);die;
+            $this->set('nome_atividade', $programacao_atividade['Atividade']['nome_atividade']);
+        
+        }
+        
+    }
+            
+    function getOptionsAtividadePorEdicao($edicao_id){
+        
+        $conditions = array();
+        
+        if (!empty($edicao_id)){
+            
+        }
+        
+        $agendas = $this->Agenda->find('all', array(
+            'conditions' => array('Edicao.id' => $edicao_id),
+        ));
+        
+        
+        $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
+        $atividades = array();
+        foreach ($agendas as $agenda){
+           if (array_key_exists($agenda['Atividade']['tipo_atividade_id'], $tipo_atividades)){
+               $agenda['Atividade']['programacao_id'] = $agenda['Agenda']['id'];
+               $agenda['Atividade']['data'] = $agenda['Agenda']['data'];
+               $agenda['Atividade']['horario_ini'] = $agenda['Agenda']['horario_ini'];
+               $agenda['Atividade']['horario_fim'] = $agenda['Agenda']['horario_fim'];
+               $agenda['Atividade']['vagas_restantes'] = $agenda['Agenda']['vagas_restantes'];
+               $atividades[$tipo_atividades[$agenda['Atividade']['tipo_atividade_id']]][] = $agenda['Atividade'];
+               //$atividades['Agenda'] = $agenda['Agenda'];
+           }
+        }
+        
+        $options = array();
+        foreach ($atividades as $tipo_atividade => $atividade){
+            foreach ($atividade as $ativ){
+                $data = CakeTime::format($ativ['data'], '%d/%m/%Y');
+                $hora_inicio = CakeTime::format($ativ['horario_ini'], '%H:%M');
+                $hora_fim = CakeTime::format($ativ['horario_fim'], '%H:%M');
+                $vagas = $ativ['vagas_restantes'];
+                
+                $txt = "{$ativ['nome_atividade']} ( {$data} das {$hora_inicio} às {$hora_fim} - Vagas Restantes: {$vagas})";
+                $options[$tipo_atividade][$ativ['programacao_id']] = $txt ;
+            }
+        }
+        
+        return $options;
+    }
 }
 
 
