@@ -2,6 +2,7 @@
         echo $this->Form->create(null, array('type' => 'post'));
         echo $this->Form->input('User.name', array('label' => 'Digite o nome da pessoa que deseja buscar:'));
         echo $this->Form->input('User.email', array('label' => 'Digite o e-mail da pessoa que deseja buscar:'));
+        echo $this->Form->input('Agenda.edicao_id', array('label' => 'Escolha a edição:', 'type' => 'select', 'options' => $options, 'empty' => '--'));
         echo $this->Form->end('Buscar');
 
 ?>

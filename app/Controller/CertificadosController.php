@@ -32,14 +32,18 @@ class CertificadosController extends AppController{
        $this->paginate['contain'] = array('User', 'Agenda');
        $conditions = array();      
        
-       if (empty($this->request->data['Agenda']['edicao_id']))
-           unset($this->request->data['Agenda']['edicao_id']);
+       //Se o usuário não pesquisar por edição ele pega sempre a última
+       if (empty($this->request->data['Agenda']['edicao_id'])){
+           $conditions['Agenda.edicao_id'] = $this->Session->read('ultima_edicao_id');
+       }   
        
-        $conditions = $this->postConditions($this->request->data, array('name' => 'LIKE', 'email' => 'LIKE'));
-        
+       //Se o usuário fazer um pesquisa o postConditions é chamad para montar a busca
+       if (!empty($this->request->data)){
+            $conditions = $this->postConditions($this->request->data, array('name' => 'LIKE', 'email' => 'LIKE'));
+       }
+       
        if ($this->Auth->user('id') != 1)
-           $conditions['User.id'] = $this->Auth->user('id');
-  
+           $conditions['User.id'][] = $this->Auth->user('id');      
        
        $this->paginate['conditions'] = $conditions;    
        $this->paginate['fields'] = array('User.*', 'Agenda.*');

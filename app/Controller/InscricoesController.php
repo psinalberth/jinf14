@@ -36,8 +36,17 @@ class InscricoesController extends AppController{
        $this->paginate['contain'] = array('User', 'Agenda');
        
        $conditions = array();
-       $conditions = $this->postConditions($this->request->data, array('name' => 'LIKE', 'email' => 'LIKE'));
-       $conditions['Agenda.edicao_id'] = $this->Session->read('ultima_edicao_id');
+       
+       //Se o usuário não pesquisar por edição ele pega sempre a última
+       if (empty($this->request->data['Agenda']['edicao_id'])){
+           $conditions['Agenda.edicao_id'] = $this->Session->read('ultima_edicao_id');
+       }
+       
+       //Se o usuário fazer um pesquisa o postConditions é chamad para montar a busca
+       if (!empty($this->request->data)){
+            $conditions = $this->postConditions($this->request->data, array('name' => 'LIKE', 'email' => 'LIKE'));
+       }
+       
        $this->paginate['conditions'] = $conditions;
        
        $this->paginate['fields'] = array('User.*');
@@ -45,7 +54,7 @@ class InscricoesController extends AppController{
        
        
        $this->set('inscricoes', $this->paginate('Inscricao'));
-       
+       $this->set('options', $this->Edicao->find('list', array('fields' => array('ano'))));
     }
     
     public function view($id = null){
