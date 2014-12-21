@@ -19,11 +19,14 @@ class FpdfHelper extends AppHelper{
     
     public $Fpdf;
     
+    public $fiels;
+    
+    public $data;
+    
+    
     public function __construct(){
        
         $this->Fpdf = new FPDF();
-        
-        $this->fiels;
         
         $this->Fpdf->AddPage('P','A4');
    
@@ -34,24 +37,60 @@ class FpdfHelper extends AppHelper{
         $this->fields = $fields;     
       
     }
+    public function setData($data){
+        $this->data = $data;     
+      
+    }
     public function setTitle($title){
-        $this->Fpdf->SetFont('Arial','B',50);
+        $title = utf8_decode($title);
+        $this->Fpdf->SetFont('Arial','B',20);
         $this->Fpdf->Cell(0, 0,$title,0,0,'C');  
         $this->Fpdf->Ln(40);       
     }
     
     function BasicTable($header, $data){
        //Header
+         $this->Fpdf->SetFont('Arial','',10);
        foreach($header as $col)
-           $this->Cell(40,7,$col,1);
-       $this->Ln();
+           $this->Fpdf->Cell(60,7,$col,1);
+       $this->Fpdf->Ln();
        // Data
-       foreach($data as $row){
-           pr($row);die;
+       $this->formatData($header, $data);
+       
+       //pr($this->data);
+       foreach($this->data as $row){
+           //pr($row);die;
            foreach($row as $col)
-               $this->Cell(40,6,$col,1);
-           $this->Ln();
+               //pr($col);
+               $this->Fpdf->Cell(60,6,$col,1);
+           $this->Fpdf->Ln();
        }
+   }
+   
+   function formatData($fields, $data){
+      
+       foreach ($data as $d){    
+           
+          foreach ($fields as $key => $value) { 
+              if (is_string($key)){
+                  $model_field = explode('.', $key);
+
+                  if (is_array($model_field)){
+                      $model = $model_field[0];
+                      $field = $model_field[1];
+                      $row[] = $d[$model][$field];                 
+                  }
+              }else{
+                  $row[] = '';
+              }
+          }
+          
+          //pr($row); 
+          $this->data[] = $row;
+          $row = null;
+       }
+       
+      //pr($this->data); die;
    }
     
     public function outPut(){

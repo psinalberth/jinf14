@@ -197,7 +197,8 @@ class InscricoesController extends AppController{
     
     function listaPresenca() { 
         
-        $this->set('options', $this->getOptionsAtividadePorEdicao($this->Session->read('ultima_edicao_id')));
+        $this->set('atividades', $this->Atividade->find('list', array('fields' => array('nome_atividade'))));
+        $this->set('edicoes', $this->Edicao->find('list',  array('fields' => array('ano'))));
         // $this->set('options', $this->Edicao->find('list', array('fields' => array('ano'))));
         //pr($this->TipoAtividade->find('all'));
     } 
@@ -205,22 +206,18 @@ class InscricoesController extends AppController{
     function imprimirListaPresenca(){
         $this->layout = 'pdf';
         
-        if (!empty($this->request->data['Agenda']['id'])){
-            
-            
-            
-            $contain = array(
-                'Atividade'
-            );
+        if (!empty($this->request->data)){
 
-            $programacao_atividade = $this->Inscricao->find('all', array(
-                //'contain' => $contain, 
-                'conditions' => array(
-                    'Agenda.id' => $this->request->data['Agenda']['id'] 
-                 )
+            $conditions = $this->builderConditions(array(
+                    'Agenda.atividade_id' => array('number', $this->request->data['Agenda']['atividade_id']),
+                    'Agenda.edicao_id' => array('number', $this->request->data['Agenda']['edicao_id'])
             ));
-            //pr($programacao_atividade);die;
-            $this->set('nome_atividade', $programacao_atividade['Atividade']['nome_atividade']);
+
+            $inscricoes_atividade = $this->Inscricao->find('all', array('conditions' => $conditions));
+            $atividade = $this->Atividade->find('first', array('conditions' => array('Atividade.id' => $this->request->data['Agenda']['atividade_id'])));
+            
+            $this->set('atividade', $atividade);
+            $this->set('inscricoes_atividade', $inscricoes_atividade);
         
         }
         
