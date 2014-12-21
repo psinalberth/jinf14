@@ -125,6 +125,7 @@ class ColaboradoresController extends AppController {
             'Agenda.id', 'TipoAtividade.id', 'TipoAtividade.nome',
             'Atividade.id', 'Atividade.nome_atividade'
         );
+         
         $joins = array(
             array('table' => 'tipo_atividade',
                 'alias' => 'TipoAtividade',
@@ -138,6 +139,7 @@ class ColaboradoresController extends AppController {
         
         $agendas = $this->Agenda->find('all', array(
             'conditions' => array('Edicao.ano' => $this->Session->read('ultima_edicao_ano')),
+            'group' => 'atividade_id'
         ));
         
         $tipo_atividades = $this->TipoAtividade->find('list', array('fields' => array('nome')));
@@ -155,9 +157,7 @@ class ColaboradoresController extends AppController {
                  $options[$ativ['programacao_id']] = $ativ['nome_atividade'] ;
             }
         }
-		
         //pr($options);
-        //die();
 		$this->set( "users",$this->User->find('list', array('fields'=> array('id','name')))); 
 		//$this->set( "agenda",$this->Agenda->find('list', array('fields'=> array('id','atividade_cod_ativ'))));
 		$this->set( "atividade",$options);
@@ -273,10 +273,14 @@ class ColaboradoresController extends AppController {
 	//	$this->checkAccess( $this->name, __FUNCTION__ );
 
 		$User = $this->User->findById($this->Auth->user("id"));
-		$Colaborador = $this->Colaborador->find('first', array('conditions' => array('Colaborador.user_id' => $User['User']['id'])));
-		
+                
+                if ($User['User']['id'] != 1){
+                    $Colaborador = $this->Colaborador->find('first', array('conditions' => array('Colaborador.user_id' => $User['User']['id'])));
+                }else{
+                    $Colaborador = $this->Colaborador->find('first', array('conditions' => array('Colaborador.user_id' => 1)));
+                }
 		$agenda = $this->Agenda->find('first', array('conditions' => array('Agenda.id' => $Colaborador['Colaborador']['programacao_id'], 'Edicao.ano' => $this->Session->read('ultima_edicao_ano'))));
-		
+
 		$atividade = $this->Atividade->find('first',array('conditions' => array('Atividade.id' => $agenda['Agenda']['atividade_id'])));
 		$agenda1 = $agenda['Agenda']['id'];
 
