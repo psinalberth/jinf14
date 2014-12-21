@@ -12,7 +12,7 @@ class ColaboradoresController extends AppController {
 
 	public $label	= "Colaboradores";
 	
-	public $submenu	= array( 'index', 'add' );
+	public $submenu	= array( 'index', 'add', 'indexlist');
 
 	public $uses = array('Colaborador','Agenda','User','Atividade','TipoAtividade','Edicao', 'Inscricao');
 
