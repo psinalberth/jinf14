@@ -30,7 +30,7 @@ class AgendaController extends AppController{
             if (!empty($this->request->data)){
                 $options = $this->postConditions($this->request->data);
             }else{
-                $options['Edicao.ano'] = $this->Session->read('ultima_edicao_ano');
+                $options['Agenda.edicao_id'] = $this->Session->read('ultima_edicao_id');
             }
             
             $this->paginate[ 'fields' ] = array( 

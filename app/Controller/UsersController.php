@@ -9,7 +9,7 @@ class UsersController extends AppController {
     public $setMenu = "Users";
     public $label = 'Usuários';
     public $submenu = array('index', 'add');
-    public $uses = array('User');
+    public $uses = array('User', 'Curso');
 
     /* ----------------------------------------
      * Callbacks
@@ -28,8 +28,15 @@ class UsersController extends AppController {
     public function index() {
 
         $this->checkAccess($this->name, __FUNCTION__);
-        $this->paginate['fields'] = array('id', 'name', 'email');
-        $this->paginate['contain'] = array('Profile.name');
+        $this->paginate['fields'] = array('id', 'name', 'email', 'telefone', 'last_login');
+        $this->paginate['contain'] = array(
+            'Profile' => array(
+                'fields' => array('id', 'name')
+            ),
+            'Curso' => array(
+                'id', 'name'
+            )
+       );
         $this->paginate['order'] = "User.created DESC";
         $this->set("users", $this->paginate("User"));
     }
@@ -37,9 +44,17 @@ class UsersController extends AppController {
     public function view($id = null) {
 
         $this->checkAccess($this->name, __FUNCTION__);
-        $this->User->contain(array('Profile' => array('fields' => array('name'))));
+        $this->User->contain(array(
+            'Profile' => array(
+                'fields' => array('id', 'name')
+            ),
+            'Curso' => array(
+                'id', 'name'
+            )
+       ));
+        
         $user = $this->User->findById($id);
-
+    
         $this->checkResult($user, 'User');
         $this->set("user", $user);
     }
@@ -65,6 +80,7 @@ class UsersController extends AppController {
         }
 
         $this->profilesList();
+        $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
         //$this->set('credenciais', $this->Credencial->find('list', array('fields' => array('id', 'descricao'))));
     }
 
@@ -110,8 +126,9 @@ class UsersController extends AppController {
                 $this->setMessage('validateError');
         }
         //$this->set('credenciais', $this->Credencial->find('list', array('fields' => array('id', 'descricao'))));
-
+        
         $this->profilesList();
+        $this->set('cursos', $this->Curso->find('list', array('fields' => array('name'))));
     }
 
     public function delete($id = null) {

@@ -117,7 +117,6 @@ class FrontEndHelper extends AppHelper {
 			if( !empty( $permissions[ $controllerName ] ) ){
 		
 				foreach( $submenu as $action ){
-					
 					if( array_key_exists( $action, $permissions[ $controllerName ][ 'action' ] ) ){
 
 						$action == $actionName ? $active = ' class="active"' : $active = null;

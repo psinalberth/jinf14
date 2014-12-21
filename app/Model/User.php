@@ -11,7 +11,7 @@ class User extends AppModel {
     /* ----------------------------------------
      * Associations
       ---------------------------------------- */
-    public $belongsTo = array('Profile');
+    public $belongsTo = array('Profile', 'Curso');
     public $hasAndBelongsToMany = array(
         'Agenda' =>
         array(
@@ -21,6 +21,8 @@ class User extends AppModel {
             'associationForeignKey' => 'programacao_id',
         )
     );
+    
+    
     public $horariosEscolhidos;
 
     /* ----------------------------------------

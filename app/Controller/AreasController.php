@@ -10,10 +10,9 @@ class AreasController extends AppController {
 
 	public $name = "Areas";
 	
-	public $submenu	= array( 
-		
-		'Areas' => array( 'add', 'index' )
-	);
+	public $submenu	= array( 'index', 'add' );
+        public $setMenu	= "Areas";
+        
 	
 	/*----------------------------------------
 	 * Actions

@@ -1,6 +1,6 @@
 <?php
 	print $this->Form->create( 'Agenda', array('type' => 'post') );
-	print $this->Form->input( 'Agenda.ano', array('label' => 'Digite a edição que deseja buscar:') );
+        print $this->Form->input('Agenda.edicao_id', array('label' => 'Escolha a edição:', 'type' => 'select', 'options' => $options, 'empty' => '--'));
 	
  	//print $this->Form->button( '<i class="icon-search icon-white"></i>Buscar', array( 'class' => 'btn btn-primary pull-left submit', 'div' => false, 'escape' => false ) );
         print $this->Form->end('Buscar') 

@@ -24,7 +24,7 @@ class InscricoesController extends AppController{
     
     public $label = 'Inscrições';
 	
-    public $submenu = array( 'index', 'add', 'imprimirListaPresenca' );
+    public $submenu = array( 'index', 'add', 'listaPresenca' );
 
     
     function beforeFilter() { 
@@ -216,6 +216,11 @@ class InscricoesController extends AppController{
             $inscricoes_atividade = $this->Inscricao->find('all', array('conditions' => $conditions));
             $atividade = $this->Atividade->find('first', array('conditions' => array('Atividade.id' => $this->request->data['Agenda']['atividade_id'])));
             
+           
+            if (empty($inscricoes_atividade)){
+                $this->Session->setFlash( 'Nenhum resultado encontrado!', "default", array( 'class' => 'error' ) );
+                return $this->redirect(array('action' => 'listaPresenca'));                
+            }
             $this->set('atividade', $atividade);
             $this->set('inscricoes_atividade', $inscricoes_atividade);
         

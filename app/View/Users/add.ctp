@@ -4,10 +4,9 @@
     <div class="span6">
         <?php
             print $this->BForm->input('User.name', array('label' => 'Nome', 'placeholder' => 'Nome do usuário'));
-            print $this->BForm->input('User.matricula', array('label' => 'Matrícula', 'placeholder' => 'Matrícula', 'type' => 'text'));
             print $this->BForm->input('User.email', array('label' => 'Email', 'placeholder' => 'exemplo@dominio.com', 'type' => 'email'));
             print $this->BForm->input('User.telefone', array('label' => 'Telefone', 'placeholder' => 'Telefone', 'type' => 'text'));
-            //print $this->BForm->input( 'User.credencial_id', array( 'label' => 'Credencial', 'empty' => '-- Selecione --' , 'options' => $credenciais) );
+            print $this->BForm->input( 'User.curso_id', array( 'label' => 'Curso:', 'type' => 'select', 'options' => $cursos, 'empty' => '--' ));
             print $this->BForm->input('User.profile_id', array('label' => 'Perfil', 'empty' => '-- Selecione --'));
         ?>
     </div>
